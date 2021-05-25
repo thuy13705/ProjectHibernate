@@ -1,7 +1,10 @@
 import dao.StudentDao;
 
+import dao.TeacherDao;
 import dao.UsersDao;
+import gui.SignIn;
 import pojo.Student;
+import pojo.Teacher;
 import pojo.Users;
 
 
@@ -9,29 +12,28 @@ public class Main {
 
 
     public static void main(final String[] args) throws Exception {
-        Student student = new Student();
-        student.setIdStudent("18120592");
-        student.setNameStudent("Nguyễn Lương Phương Thuỷ");
-        student.setUsername(student.getIdStudent());
-        student.setPasswordSt(student.getIdStudent());
-        student.setEmail("nguyenbinhnhi@gmail.com");
-        student.setGender(1);
-        boolean kq = StudentDao.addStudent(student);
-        if (kq == true) {
-            Users user=new Users(student.getUsername(),student.getPasswordSt(),1);
-            boolean results= UsersDao.addUser(user);
-            if (results == true) {
+//        Teacher teacher = new Teacher();
+//        teacher.setIdTeacher("GV1012");
+//        teacher.setNameTeacher("Nguyễn Ngọc Hà");
+//        teacher.setUsername(teacher.getIdTeacher());
+//        teacher.setPasswordTc(teacher.getIdTeacher());
+//        teacher.setEmail("GV1012@hcmus.edu.vn");
+//        boolean kq = TeacherDao.addTeacher(teacher);
+//        if (kq == true) {
+//            Users user=new Users(teacher.getUsername(),teacher.getPasswordTc(),0);
+//            boolean results= UsersDao.addUser(user);
+//            if (results == true) {
+//
+//                System.out.println("Thêm thành công");
+//            } else {
+//                System.out.println("Thêm thất bại");
+//            }
+//            System.out.println("Thêm thành công");
+//        } else {
+//            System.out.println("Thêm thất bại");
+//        }
 
-                System.out.println("Thêm thành công");
-            } else {
-                System.out.println("Thêm thất bại");
-            }
-            System.out.println("Thêm thành công");
-        } else {
-            System.out.println("Thêm thất bại");
-        }
-
-//        SignIn signIn=new SignIn();
-//        signIn.setVisible(true);
+        SignIn signIn=new SignIn();
+        signIn.setVisible(true);
     }
 }
