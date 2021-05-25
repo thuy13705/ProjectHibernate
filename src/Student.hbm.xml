@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="pojo.Student" table="student" schema="coursesystem">
+        <id name="idStudent">
+            <column name="idStudent" sql-type="varchar(11)" length="11"/>
+        </id>
+        <property name="nameStudent">
+            <column name="nameStudent" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="username">
+            <column name="username" sql-type="varchar(50)" length="50"/>
+        </property>
+        <property name="passwordSt">
+            <column name="passwordST" sql-type="varchar(20)" length="20"/>
+        </property>
+        <property name="email">
+            <column name="email" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="gender">
+            <column name="gender" sql-type="int" not-null="true"/>
+        </property>
+        <many-to-one class="pojo.ClassSubject" name="idClass"
+                     fetch="select">
+            <column length="11" name="idClass" />
+        </many-to-one>
+        <set inverse="true" name="registrations" >
+            <key>
+                <column length="11" name="idStudent" />
+            </key>
+            <one-to-many class="pojo.CourseRegistration"/>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="pojo.CourseSession" table="coursesession" schema="coursesystem">
+        <id name="idSession">
+            <column name="idSession" sql-type="varchar(11)" length="11"/>
+        </id>
+        <property name="nameSession">
+            <column name="nameSession" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="startDay">
+            <column name="startDay" sql-type="date" not-null="true"/>
+        </property>
+        <property name="endDay">
+            <column name="endDay" sql-type="date" not-null="true"/>
+        </property>
+        <many-to-one class="pojo.Semester" name="idSemester"
+                     fetch="select">
+            <column length="11" name="idSemester" />
+        </many-to-one>
+        <set inverse="true" name="courses" >
+            <key>
+                <column length="11" name="idCourse" />
+            </key>
+            <one-to-many class="pojo.CourseOpen"/>
+        </set>
+    </class>
+</hibernate-mapping>
