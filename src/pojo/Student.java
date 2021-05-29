@@ -13,6 +13,28 @@ public class Student {
     private ClassSubject idClass;
     private Set<CourseRegistration> registrations;
 
+    public Student() {
+    }
+
+    public Student(String idStudent, String nameStudent, String username, String passwordSt, String email, Integer gender) {
+        this.idStudent = idStudent;
+        this.nameStudent = nameStudent;
+        this.username = username;
+        this.passwordSt = passwordSt;
+        this.email = email;
+        this.gender = gender;
+    }
+
+    public Student(String idStudent, String nameStudent, String username, String passwordSt, String email, Integer gender, ClassSubject idClass) {
+        this.idStudent = idStudent;
+        this.nameStudent = nameStudent;
+        this.username = username;
+        this.passwordSt = passwordSt;
+        this.email = email;
+        this.gender = gender;
+        this.idClass = idClass;
+    }
+
     public Set<CourseRegistration> getRegistrations() {
         return registrations;
     }

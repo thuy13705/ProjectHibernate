@@ -4,6 +4,9 @@ import dao.TeacherDao;
 import pojo.Teacher;
 import pojo.Users;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
 public class AccountPanel extends javax.swing.JPanel {
 
     /**
@@ -76,9 +79,19 @@ public class AccountPanel extends javax.swing.JPanel {
         changePWBtn.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         changePWBtn.setText("Change Password");
         changePWBtn.setPreferredSize(new java.awt.Dimension(200, 35));
+        changePWBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePWBtnActionPerformed(evt);
+            }
+        });
 
         editBtn.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         editBtn.setText("Edit");
+        editBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBtnActionPerformed(evt);
+            }
+        });
 
         Teacher teacher=TeacherDao.getTeacher(user.getUsername());
         idText.setText(teacher.getIdTeacher());
@@ -160,6 +173,18 @@ public class AccountPanel extends javax.swing.JPanel {
                                 .addComponent(contentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>
+
+    private void editBtnActionPerformed(ActionEvent evt) {
+
+            JDialog dialog=new EditTeacher(new CourseSystemFrame(),true,user);
+            dialog.setVisible(true);
+
+    }
+
+    private void changePWBtnActionPerformed(ActionEvent evt) {
+        JDialog dialog=new ChangePassword(new CourseSystemFrame(),true,user);
+        dialog.setVisible(true);
+    }
 
 
     // Variables declaration - do not modify

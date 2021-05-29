@@ -1,11 +1,4 @@
-import dao.StudentDao;
-
-import dao.TeacherDao;
-import dao.UsersDao;
-import gui.SignIn;
-import pojo.Student;
-import pojo.Teacher;
-import pojo.Users;
+import gui.CourseSystemFrame;
 
 
 public class Main {
@@ -33,7 +26,7 @@ public class Main {
 //            System.out.println("Thêm thất bại");
 //        }
 
-        SignIn signIn=new SignIn();
-        signIn.setVisible(true);
+        CourseSystemFrame courseSystemFrame=new CourseSystemFrame();
+        courseSystemFrame.setVisible(true);
     }
 }
