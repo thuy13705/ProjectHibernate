@@ -185,7 +185,7 @@ public class AddStudent extends javax.swing.JDialog {
                    student=new Student(id,name,username,pass,email,tmp);
                }
                StudentDao.addStudent(student);
-               Users user=new Users(id,pass,0);
+               Users user=new Users(id,pass,1);
                UsersDao.addUser(user);
                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add student success.");
                setVisible(false);

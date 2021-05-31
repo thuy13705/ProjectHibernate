@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import pojo.Student;
 import pojo.Teacher;
 import util.HibernateUtil;
 
@@ -104,4 +105,27 @@ public class TeacherDao {
         }
         return true;
     }
+
+    public static List<Teacher> fullTextSearch(String textSearch){
+        List<Teacher> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            if (textSearch==null)
+                textSearch="%";
+            else
+                textSearch="%" +textSearch +"%";
+            Query query = session.createQuery("from Teacher where idTeacher like: textSearch or nameTeacher like: textSearch");
+            query.setParameter("textSearch",textSearch);
+            List<Teacher> list1= (List<Teacher>) ((org.hibernate.query.Query<?>) query).list();
+            ds=list1;
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
+    }
+
 }

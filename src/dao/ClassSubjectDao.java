@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import pojo.ClassSubject;
+import pojo.Student;
 import util.HibernateUtil;
 
 import javax.persistence.Query;
@@ -104,4 +105,26 @@ public class ClassSubjectDao {
         }
         return true;
     }
+    public static List<ClassSubject> fullTextSearch(String textSearch){
+        List<ClassSubject> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            if (textSearch==null)
+                textSearch="%";
+            else
+                textSearch="%" +textSearch +"%";
+            Query query = session.createQuery("from ClassSubject where idClass like: textSearch or nameClass like: textSearch");
+            query.setParameter("textSearch",textSearch);
+            List<ClassSubject> list1= (List<ClassSubject>) ((org.hibernate.query.Query<?>) query).list();
+            ds=list1;
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
+    }
+
 }

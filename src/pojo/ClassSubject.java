@@ -8,6 +8,16 @@ public class ClassSubject {
     private String nameClass;
     private Set<Student> students;
 
+    public ClassSubject(String idClass, String nameClass,Set<Student> students) {
+        this.idClass = idClass;
+        this.nameClass = nameClass;
+        this.students=students;
+    }
+
+    public ClassSubject() {
+
+    }
+
     public Set<Student> getStudents() {
         return students;
     }

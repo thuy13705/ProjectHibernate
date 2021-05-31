@@ -2,18 +2,19 @@ package gui;
 
 import dao.ClassSubjectDao;
 import dao.StudentDao;
+import dao.UsersDao;
 import pojo.ClassSubject;
 import pojo.Student;
+import pojo.Users;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 public class StudentPanel extends javax.swing.JPanel {
 
-
+    private Student student;
     public StudentPanel() {
         initComponents();
     }
@@ -71,8 +72,8 @@ public class StudentPanel extends javax.swing.JPanel {
                                 .addComponent(studentLabel)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        showTable();
+        List<Student> list=StudentDao.getStudentList();
+        showTable(list);
         studentTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 studentTableMouseClicked(evt);
@@ -91,6 +92,11 @@ public class StudentPanel extends javax.swing.JPanel {
 
 
         searchBtn.setText("Search");
+        searchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBtnActionPerformed(evt);
+            }
+        });
 
         sortBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending Name", "Descending Name", "Ascending ID", "Descending ID" }));
 
@@ -226,16 +232,41 @@ public class StudentPanel extends javax.swing.JPanel {
 
     }// </editor-fold>
 
+    private void searchBtnActionPerformed(ActionEvent evt) {
+        List<Student> list=StudentDao.fullTextSearch(searchTxt.getText());
+        if (sortBox.getSelectedIndex()==0)
+            list=sortAscendingByName(list);
+        if (sortBox.getSelectedIndex()==1)
+            list=sortDescendingByName(list);
+        if (sortBox.getSelectedIndex()==2)
+            list=sortAscendingByID(list);
+        if (sortBox.getSelectedIndex()==3)
+            list=sortDescendingByID(list);
+        showTable(list);
+    }
+    private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        List<Student> list=StudentDao.getStudentList();
+        if (sortBox.getSelectedIndex()==0)
+            list=sortAscendingByName(list);
+        if (sortBox.getSelectedIndex()==1)
+            list=sortDescendingByName(list);
+        if (sortBox.getSelectedIndex()==2)
+            list=sortAscendingByID(list);
+        if (sortBox.getSelectedIndex()==3)
+            list=sortDescendingByID(list);
+        showTable(list);
+    }
+
 
     private void addBtnActionPerformed(ActionEvent evt) {
         JDialog dialog=new AddStudent(new CourseSystemFrame(),true);
         dialog.setVisible(true);
-        showTable();
+        List<Student> list=StudentDao.getStudentList();
+        showTable(list);
         tableScroll.setViewportView(studentTable);
     }
 
-    private void showTable() {
-        List<Student> list=StudentDao.getStudentList();
+    private void showTable(List<Student> list) {
         int size= list.size();
         Object [][]students=new Object[size][7];
         for (int i=0;i<size; i++){
@@ -246,10 +277,10 @@ public class StudentPanel extends javax.swing.JPanel {
             students[i][4]=list.get(i).getEmail();
             ClassSubject classSubject= list.get(i).getIdClass();
             if (classSubject!=null){
-                students[i][5]=list.get(i).getIdClass();
+                students[i][5]=classSubject.getNameClass();
             }
             else {
-                students[i][5]=null;
+                students[i][5]="";
             }
             String gender="";
             if (list.get(i).getGender()==1){
@@ -276,13 +307,16 @@ public class StudentPanel extends javax.swing.JPanel {
         });
     }
 
-    private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        String id=student.getIdStudent();
+
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to delete?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            StudentDao.deleteStudent(id);
+            UsersDao.deleteUser(id);
+        }
+        List<Student> list=StudentDao.getStudentList();
+        showTable(list);
     }
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {
         String id=idTxt.getText();
@@ -291,25 +325,84 @@ public class StudentPanel extends javax.swing.JPanel {
         String username=usernameTxt.getText();
         String email=emailTxt.getText();
         String classes=ckassTxt.getText();
-        int tmp=1;
+        System.out.println(classes);
+
+        int tmp=-1;
         if (gender.equals("Nữ")){
             tmp=1;
         }
         else if (gender.equals("Nam")){
             tmp=0;
         }
-        else{
-            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender incorrect.");
+        ClassSubject classSubject=null;
+        if (!classes.equals("")){
+            classSubject= ClassSubjectDao.getClass(classes);
         }
-        if (classes!=null){
-            ClassSubject classSubject= ClassSubjectDao.getClass(classes);
+        Student st=StudentDao.getStudent(id);
+        if (id.equals(student.getIdStudent())){
+            if (tmp!=-1 && classSubject!=null){
+                StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,classSubject));
+                UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+            }
+            else{
+                if (tmp==-1)
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender is incorrect.");
+                if (classSubject==null )
+                {
+                    if (classes.equals("")){
+                        StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,null));
+                        UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
+                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+                    }
+                    else
+                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class doesn't exist.");
+                }
+            }
         }
-        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+        else {
+            if (st==null){
+                StudentDao.deleteStudent(student.getIdStudent());
+                StudentDao.deleteStudent(student.getIdStudent());
+                if (tmp!=-1 && null != classSubject){
+                    StudentDao.addStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,classSubject));
+                    UsersDao.addUser(new Users(username,st.getPasswordSt(),1));
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+                }
+                else{
+                    if (tmp==-1)
+                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender is incorrect.");
+                    if (classSubject==null )
+                    {
+                        if (classes.equals("")){
+                            StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,null));
+                            UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
+                            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+                        }
+                        else
+                            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class doesn't exist.");
+                    }
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID exists.");
+            }
+        }
+        List<Student> list=StudentDao.getStudentList();
+        showTable(list);
     }
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to reset password?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            student.setPasswordSt(student.getIdStudent());
+            Users users=new Users(student.getUsername(),student.getPasswordSt(),1);
+            StudentDao.updateStudent(student);
+            UsersDao.updateUser(users);
+        }
+        List<Student> list=StudentDao.getStudentList();
+        showTable(list);    }
     private void studentTableMouseClicked(java.awt.event.MouseEvent evt) {
         int row=studentTable.getSelectedRow();
         if (row>=0){
@@ -319,9 +412,48 @@ public class StudentPanel extends javax.swing.JPanel {
             emailTxt.setText(studentTable.getModel().getValueAt(row,4).toString());
             ckassTxt.setText(studentTable.getModel().getValueAt(row,5).toString());
             genderTxt.setText(studentTable.getModel().getValueAt(row,6).toString());
+            student=StudentDao.getStudent(studentTable.getModel().getValueAt(row,1).toString());
         }
     }
+    public List<Student> sortAscendingByID(List<Student> list){
+        Collections.sort(list, new Comparator<Student>() {
+            @Override
+            public int compare(Student  sv1, Student sv2) {
+                return sv1.getIdStudent().compareTo(sv2.getIdStudent());
+            }
+        });
+        return list;
+    }
 
+    public List<Student> sortDescendingByID(List<Student> list){
+        Collections.sort(list, new Comparator<Student>() {
+            @Override
+            public int compare(Student  sv1, Student sv2) {
+                return sv2.getIdStudent().compareTo(sv1.getIdStudent());
+            }
+        });
+        return list;
+    }
+
+    public List<Student> sortAscendingByName(List<Student> list){
+        Collections.sort(list, new Comparator<Student>() {
+            @Override
+            public int compare(Student  sv1, Student sv2) {
+                return sv1.getNameStudent().compareTo(sv2.getNameStudent());
+            }
+        });
+        return list;
+    }
+
+    public List<Student> sortDescendingByName(List<Student> list){
+        Collections.sort(list, new Comparator<Student>() {
+            @Override
+            public int compare(Student  sv1, Student sv2) {
+                return sv2.getNameStudent().compareTo(sv1.getNameStudent());
+            }
+        });
+        return list;
+    }
     // Variables declaration - do not modify
     private javax.swing.JButton addBtn;
     private javax.swing.JTextField ckassTxt;

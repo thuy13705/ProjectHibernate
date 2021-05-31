@@ -105,4 +105,27 @@ public class StudentDao {
         return true;
     }
 
+    public static List<Student> fullTextSearch(String textSearch){
+        List<Student> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            if (textSearch==null)
+                textSearch="%";
+            else
+                textSearch="%" +textSearch +"%";
+            Query query = session.createQuery("from Student where idStudent like: textSearch or nameStudent like: textSearch");
+            query.setParameter("textSearch",textSearch);
+            List<Student> list1= (List<Student>) ((org.hibernate.query.Query<?>) query).list();
+            ds=list1;
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
+    }
+
+
 }

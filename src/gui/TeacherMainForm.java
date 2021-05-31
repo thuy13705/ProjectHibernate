@@ -51,11 +51,21 @@ public class TeacherMainForm extends javax.swing.JPanel {
         teacherBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         teacherBtn.setForeground(new java.awt.Color(255, 255, 255));
         teacherBtn.setText("Teacher Management");
+        teacherBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                teacherBtnActionPerformed(evt);
+            }
+        });
 
         classBtn.setBackground(new java.awt.Color(117, 86, 253));
         classBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         classBtn.setForeground(new java.awt.Color(255, 255, 255));
         classBtn.setText("Class Management");
+        classBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                classBtnActionPerformed(evt);
+            }
+        });
 
         subjectBtn.setBackground(new java.awt.Color(117, 86, 253));
         subjectBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -234,6 +244,22 @@ public class TeacherMainForm extends javax.swing.JPanel {
         );
     }// </editor-fold>
 
+    private void teacherBtnActionPerformed(ActionEvent evt) {
+        JPanel panel=new TeacherPanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();
+    }
+    private void classBtnActionPerformed(ActionEvent evt) {
+        JPanel panel=new ClassPanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();
+    }
     private void studentBtnActionPerformed(java.awt.event.ActionEvent evt) {
         JPanel panel=new StudentPanel();
         managementPanel.removeAll();
@@ -244,15 +270,24 @@ public class TeacherMainForm extends javax.swing.JPanel {
     }
 
     private void subjectBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+        JPanel panel=new SubjectPanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();    }
 
     private void courseBtnActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
     private void semesterBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        JPanel panel=new SemesterPanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();
     }
     private void signOutBtnActionPerformed(ActionEvent evt) {
         JPanel panel=new SignInPanel();
@@ -275,8 +310,12 @@ public class TeacherMainForm extends javax.swing.JPanel {
 
 
     private void sessionBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+        JPanel panel=new SessionPanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();    }
 
     private void registrationBtnActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:

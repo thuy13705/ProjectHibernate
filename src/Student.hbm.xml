@@ -24,7 +24,7 @@
             <column name="gender" sql-type="int" not-null="true"/>
         </property>
         <many-to-one class="pojo.ClassSubject" name="idClass"
-                     fetch="select">
+                     fetch="select" lazy="false">
             <column length="11" name="idClass" />
         </many-to-one>
         <set inverse="true" name="registrations" >
