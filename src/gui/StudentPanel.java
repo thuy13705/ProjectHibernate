@@ -2,6 +2,7 @@ package gui;
 
 import dao.ClassSubjectDao;
 import dao.StudentDao;
+import dao.TeacherDao;
 import dao.UsersDao;
 import pojo.ClassSubject;
 import pojo.Student;
@@ -362,11 +363,12 @@ public class StudentPanel extends javax.swing.JPanel {
         }
         else {
             if (st==null){
-                StudentDao.deleteStudent(student.getIdStudent());
-                StudentDao.deleteStudent(student.getIdStudent());
+                String pass=student.getPasswordSt();
+                UsersDao.deleteUser(student.getIdStudent());
+                TeacherDao.deleteTeacher(student.getIdStudent());
                 if (tmp!=-1 && null != classSubject){
-                    StudentDao.addStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,classSubject));
-                    UsersDao.addUser(new Users(username,st.getPasswordSt(),1));
+                    StudentDao.addStudent(new Student(id,name,username,pass,email,tmp,classSubject));
+                    UsersDao.addUser(new Users(username,pass,1));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
                 }
                 else{
@@ -375,8 +377,8 @@ public class StudentPanel extends javax.swing.JPanel {
                     if (classSubject==null )
                     {
                         if (classes.equals("")){
-                            StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,null));
-                            UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
+                            StudentDao.updateStudent(new Student(id,name,username,pass,email,tmp,null));
+                            UsersDao.updateUser(new Users(username,pass,1));
                             JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
                         }
                         else
@@ -402,7 +404,8 @@ public class StudentPanel extends javax.swing.JPanel {
             UsersDao.updateUser(users);
         }
         List<Student> list=StudentDao.getStudentList();
-        showTable(list);    }
+        showTable(list);
+    }
     private void studentTableMouseClicked(java.awt.event.MouseEvent evt) {
         int row=studentTable.getSelectedRow();
         if (row>=0){

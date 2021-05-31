@@ -1,11 +1,31 @@
 package pojo;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class Subjects {
     private String idSubject;
     private String nameSubject;
     private Integer credits;
+    private Set<CourseOpen> subjects;
+
+    public Subjects(String idSubject, String nameSubject, Integer credits) {
+        this.idSubject = idSubject;
+        this.nameSubject = nameSubject;
+        this.credits = credits;
+    }
+
+    public Subjects() {
+
+    }
+
+    public Set<CourseOpen> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Set<CourseOpen> subjects) {
+        this.subjects = subjects;
+    }
 
     public String getIdSubject() {
         return idSubject;

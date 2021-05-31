@@ -9,6 +9,18 @@ public class Teacher {
     private String passwordTc;
     private String email;
 
+    public Teacher(String idTeacher, String nameTeacher, String username, String passwordTc, String email) {
+        this.idTeacher = idTeacher;
+        this.nameTeacher = nameTeacher;
+        this.username = username;
+        this.passwordTc = passwordTc;
+        this.email = email;
+    }
+
+    public Teacher() {
+
+    }
+
     public String getIdTeacher() {
         return idTeacher;
     }

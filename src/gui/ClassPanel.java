@@ -2,9 +2,11 @@ package gui;
 
 import dao.ClassSubjectDao;
 import dao.StudentDao;
+import dao.SubjectDao;
 import dao.UsersDao;
 import pojo.ClassSubject;
 import pojo.Student;
+import pojo.Subjects;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -187,6 +189,33 @@ public class ClassPanel extends javax.swing.JPanel {
     }// </editor-fold>
 
     private void editBtnActionPerformed(ActionEvent evt) {
+        String id=idTxt.getText();
+        String name=nameTxt.getText();
+
+
+        if (id.equals(classSubject.getIdClass())){
+            if (name!=""){
+                classSubject.setNameClass(name);
+                ClassSubjectDao.updateClass(classSubject);
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+
+            }
+            else
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
+        }
+        else{
+            if (name!="" ){
+
+                ClassSubjectDao.deleteClass(classSubject.getIdClass());
+                ClassSubjectDao.addClass(new ClassSubject(id,name,null));
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+
+            }
+            else
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
+        }
+        List<ClassSubject> list=ClassSubjectDao.getClassList();
+        showTable(list);
     }
 
     private void showTable(List<ClassSubject> list) {
