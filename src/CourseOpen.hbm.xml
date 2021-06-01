@@ -31,6 +31,10 @@
                      fetch="select">
             <column length="11" name="idSession" />
         </many-to-one>
+        <many-to-one class="pojo.Semester" name="idSemester"
+                     fetch="select">
+            <column length="11" name="idSemester" />
+        </many-to-one>
         <set inverse="true" name="registrations" >
             <key>
                 <column length="11" name="idCourse" />

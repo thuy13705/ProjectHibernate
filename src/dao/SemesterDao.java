@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import pojo.ClassSubject;
 import pojo.Semester;
 import util.HibernateUtil;
 
@@ -103,5 +104,26 @@ public class SemesterDao {
             session.close();
         }
         return true;
+    }
+    public static List<Semester> fullTextSearch(String textSearch){
+        List<Semester> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            if (textSearch==null)
+                textSearch="%";
+            else
+                textSearch="%" +textSearch +"%";
+            Query query = session.createQuery("from Semester where idSemester like: textSearch or nameSemester like: textSearch");
+            query.setParameter("textSearch",textSearch);
+            List<Semester> list1= (List<Semester>) ((org.hibernate.query.Query<?>) query).list();
+            ds=list1;
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
     }
 }

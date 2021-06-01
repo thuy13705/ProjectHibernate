@@ -1,15 +1,8 @@
 package gui;
 
 
-import dao.ClassSubjectDao;
 import dao.SubjectDao;
-import dao.TeacherDao;
-import dao.UsersDao;
-
-import pojo.ClassSubject;
 import pojo.Subjects;
-import pojo.Teacher;
-import pojo.Users;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

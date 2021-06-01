@@ -1,6 +1,6 @@
 package pojo;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,6 +11,37 @@ public class Semester {
     private Date startDay;
     private Date endDay;
     private Set<CourseSession> sessons;
+    private Set<Semester> courses;
+    private Integer state;
+
+    public Semester(String idSemester, String nameSemester, Integer yearSemester, Date startDay, Date endDay, Integer state) {
+        this.idSemester = idSemester;
+        this.nameSemester = nameSemester;
+        this.yearSemester = yearSemester;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.state = state;
+    }
+
+    public Semester() {
+
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Set<Semester> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Semester> courses) {
+        this.courses = courses;
+    }
 
     public Set<CourseSession> getSessons() {
         return sessons;

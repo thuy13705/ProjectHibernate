@@ -20,11 +20,20 @@
         <property name="endDay">
             <column name="endDay" sql-type="date" not-null="true"/>
         </property>
-        <set inverse="true" name="sessons" >
+        <property name="state">
+            <column name="state" sql-type="int" not-null="true"/>
+        </property>
+        <set inverse="true" name="sessons" fetch="join" lazy="false" >
             <key>
                 <column length="45" name="idSession"/>
             </key>
             <one-to-many class="pojo.CourseSession"/>
+        </set>
+        <set inverse="true" name="courses" fetch="join" lazy="false" >
+            <key>
+                <column length="11" name="idSemester" />
+            </key>
+            <one-to-many class="pojo.Semester"/>
         </set>
     </class>
 </hibernate-mapping>

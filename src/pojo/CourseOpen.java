@@ -15,6 +15,15 @@ public class CourseOpen {
     private Subjects idSubject;
     private CourseSession idSession;
     private Set<CourseRegistration> registrations;
+    private Semester idSemester;
+
+    public Semester getIdSemester() {
+        return idSemester;
+    }
+
+    public void setIdSemester(Semester idSemester) {
+        this.idSemester = idSemester;
+    }
 
     public Set<CourseRegistration> getRegistrations() {
         return registrations;
