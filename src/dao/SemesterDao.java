@@ -135,7 +135,8 @@ public class SemesterDao {
 
             Query query = session.createQuery("from Semester where state=1");
             List<Semester> list1= (List<Semester>) ((org.hibernate.query.Query<?>) query).list();
-            ds=list1.get(0);
+            if (list1.size()!=0)
+                ds=list1.get(0);
         } catch (HibernateException ex) {
             //Log the exception
             System.err.println(ex);

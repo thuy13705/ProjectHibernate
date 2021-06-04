@@ -7,26 +7,33 @@ import java.util.Set;
 public class Semester {
     private String idSemester;
     private String nameSemester;
-    private Integer yearSemester;
+    private String yearSemester;
     private Date startDay;
     private Date endDay;
-    private Set<CourseSession> sessons;
-    private Set<Semester> courses;
+    private Set<CourseOpen> courses;
     private Integer state;
+    private Set<CourseSession> sessions;
 
-    public Semester(String idSemester, String nameSemester, Integer yearSemester, Date startDay, Date endDay, Set<CourseSession> sessons, Set<Semester> courses, Integer state) {
+    public Semester() {
+
+    }
+    public Semester(String idSemester, String nameSemester, String yearSemester, Date startDay, Date endDay, Set<CourseOpen> courses, Integer state, Set<CourseSession> sessions) {
         this.idSemester = idSemester;
         this.nameSemester = nameSemester;
         this.yearSemester = yearSemester;
         this.startDay = startDay;
         this.endDay = endDay;
-        this.sessons = sessons;
         this.courses = courses;
         this.state = state;
+        this.sessions = sessions;
     }
 
-    public Semester() {
+    public Set<CourseSession> getSessions() {
+        return sessions;
+    }
 
+    public void setSessions(Set<CourseSession> sessions) {
+        this.sessions = sessions;
     }
 
     public Integer getState() {
@@ -37,21 +44,14 @@ public class Semester {
         this.state = state;
     }
 
-    public Set<Semester> getCourses() {
+    public Set<CourseOpen> getCourses() {
         return courses;
     }
 
-    public void setCourses(Set<Semester> courses) {
+    public void setCourses(Set<CourseOpen> courses) {
         this.courses = courses;
     }
 
-    public Set<CourseSession> getSessons() {
-        return sessons;
-    }
-
-    public void setSessons(Set<CourseSession> sessons) {
-        this.sessons = sessons;
-    }
 
     public String getIdSemester() {
         return idSemester;
@@ -69,11 +69,11 @@ public class Semester {
         this.nameSemester = nameSemester;
     }
 
-    public Integer getYearSemester() {
+    public String getYearSemester() {
         return yearSemester;
     }
 
-    public void setYearSemester(Integer yearSemester) {
+    public void setYearSemester(String yearSemester) {
         this.yearSemester = yearSemester;
     }
 

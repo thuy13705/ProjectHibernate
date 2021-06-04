@@ -9,6 +9,16 @@ public class CourseRegistration {
     private CourseOpen idCourse;
     private Student idStudent;
 
+    public CourseRegistration(Time timeRegistration, CourseOpen idCourse, Student idStudent) {
+        this.timeRegistration = timeRegistration;
+        this.idCourse = idCourse;
+        this.idStudent = idStudent;
+    }
+
+    public CourseRegistration() {
+
+    }
+
     public Student getIdStudent() {
         return idStudent;
     }

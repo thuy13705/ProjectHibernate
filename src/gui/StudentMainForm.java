@@ -166,7 +166,12 @@ public class StudentMainForm extends javax.swing.JPanel {
     }
 
     private void courseBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        JPanel panel=new CourseStudentPanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();
     }
 
     private void accountBtnActionPerformed(java.awt.event.ActionEvent evt) {

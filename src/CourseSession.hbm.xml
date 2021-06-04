@@ -21,11 +21,5 @@
                      fetch="select" lazy="false">
             <column length="11" name="idSemester" />
         </many-to-one>
-        <set inverse="true" name="courses" fetch="join" lazy="false" >
-            <key>
-                <column length="11" name="idCourse" />
-            </key>
-            <one-to-many class="pojo.CourseOpen"/>
-        </set>
     </class>
 </hibernate-mapping>

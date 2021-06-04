@@ -15,10 +15,10 @@
             <column name="room" sql-type="varchar(10)" length="10" not-null="true"/>
         </property>
         <property name="dayCourse">
-            <column name="dayCourse" sql-type="int" not-null="true"/>
+            <column name="dayCourse" sql-type="varchar(11)" not-null="true"/>
         </property>
         <property name="studyTime">
-            <column name="studyTime" sql-type="int" not-null="true"/>
+            <column name="studyTime" sql-type="varchar(20)" not-null="true"/>
         </property>
         <property name="slots">
             <column name="slots" sql-type="int" not-null="true"/>
@@ -27,12 +27,8 @@
                      fetch="select">
             <column length="11" name="idSubject"/>
         </many-to-one>
-        <many-to-one class="pojo.CourseSession" name="idSession"
-                     fetch="select" lazy="false">
-            <column length="11" name="idSession" />
-        </many-to-one>
         <many-to-one class="pojo.Semester" name="idSemester"
-                     fetch="select" lazy="false">
+                     fetch="select" lazy="false" cascade="delete">
             <column length="11" name="idSemester" />
         </many-to-one>
         <set inverse="true" name="registrations" fetch="join" lazy="false">

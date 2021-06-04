@@ -284,7 +284,7 @@ public class SemesterPanel extends javax.swing.JPanel {
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) throws ParseException {
         String id=idTxt.getText();
         String name=nameTxt.getText();
-        Integer year=Integer.parseInt(yearTxt.getText());
+        String year=yearTxt.getText();
         Date startDay=dateFormat.parse(dateFormat.format(startTxt.getDate()));
         Date endDay=dateFormat.parse(dateFormat.format(startTxt1.getDate()));
         if (id.equals("")){
@@ -297,7 +297,7 @@ public class SemesterPanel extends javax.swing.JPanel {
             else
             {
                 if (!name.equals("") && year!=null && startDay!=null && endDay!=null){
-                    SemesterDao.addSemester(new Semester(id,name,year,startDay,endDay,null,null,0));
+                    SemesterDao.addSemester(new Semester(id,name,year,startDay,endDay,null,0,null));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Semester Success.");
                 }
             }

@@ -114,7 +114,7 @@ public class CourseOpenDao {
                 textSearch="%";
             else
                 textSearch="%" +textSearch +"%";
-            Query query = session.createQuery("from CourseOpen where idCourse like: textSearch or teacher like: textSearch");
+            Query query = session.createQuery("from CourseOpen c where c.idCourse like: textSearch or c.teacher like: textSearch");
             query.setParameter("textSearch",textSearch);
             List<CourseOpen> list1= (List<CourseOpen>) ((org.hibernate.query.Query<?>) query).list();
             ds=list1;

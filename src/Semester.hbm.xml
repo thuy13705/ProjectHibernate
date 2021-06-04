@@ -12,7 +12,7 @@
             <column name="nameSemester" sql-type="varchar(50)" length="50" not-null="true"/>
         </property>
         <property name="yearSemester">
-            <column name="yearSemester" sql-type="int" not-null="true"/>
+            <column name="yearSemester" sql-type="year" not-null="true"/>
         </property>
         <property name="startDay">
             <column name="startDay" sql-type="date" not-null="true"/>
@@ -23,17 +23,17 @@
         <property name="state">
             <column name="state" sql-type="int" not-null="true"/>
         </property>
-        <set inverse="true" name="sessons" fetch="join" lazy="false" >
+        <set inverse="true" name="sessions" fetch="join" lazy="false" >
             <key>
-                <column length="45" name="idSession"/>
+                <column length="11" name="idSemester"/>
             </key>
             <one-to-many class="pojo.CourseSession"/>
         </set>
         <set inverse="true" name="courses" fetch="join" lazy="false" >
             <key>
-                <column length="11" name="idSemester" />
+                <column length="11" name="idCourse" />
             </key>
-            <one-to-many class="pojo.Semester"/>
+            <one-to-many class="pojo.CourseOpen"/>
         </set>
     </class>
 </hibernate-mapping>

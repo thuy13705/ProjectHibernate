@@ -8,19 +8,17 @@ import java.util.Set;
 public class CourseOpen {
     private String idCourse;
     private Semester idSemester;
-    private CourseSession idSession;
     private Subjects idSubject;
     private String teacher;
     private String room;
-    private Integer dayCourse;
-    private Integer studyTime;
+    private String dayCourse;
+    private String studyTime;
     private Integer slots;
     private Set<CourseRegistration> registrations;
 
-    public CourseOpen(String idCourse, Semester idSemester, CourseSession idSession, Subjects idSubject, String teacher, String room, Integer dayCourse, Integer studyTime, Integer slots, Set<CourseRegistration> registrations) {
+    public CourseOpen(String idCourse, Semester idSemester, Subjects idSubject, String teacher, String room, String dayCourse, String studyTime, Integer slots, Set<CourseRegistration> registrations) {
         this.idCourse = idCourse;
         this.idSemester = idSemester;
-        this.idSession = idSession;
         this.idSubject = idSubject;
         this.teacher = teacher;
         this.room = room;
@@ -48,14 +46,6 @@ public class CourseOpen {
 
     public void setRegistrations(Set<CourseRegistration> registrations) {
         this.registrations = registrations;
-    }
-
-    public CourseSession getIdSession() {
-        return idSession;
-    }
-
-    public void setIdSession(CourseSession idSession) {
-        this.idSession = idSession;
     }
 
     public Subjects getIdSubject() {
@@ -90,19 +80,19 @@ public class CourseOpen {
         this.room = room;
     }
 
-    public Integer getDayCourse() {
+    public String getDayCourse() {
         return dayCourse;
     }
 
-    public void setDayCourse(Integer dayCourse) {
+    public void setDayCourse(String dayCourse) {
         this.dayCourse = dayCourse;
     }
 
-    public Integer getStudyTime() {
+    public String getStudyTime() {
         return studyTime;
     }
 
-    public void setStudyTime(Integer studyTime) {
+    public void setStudyTime(String studyTime) {
         this.studyTime = studyTime;
     }
 

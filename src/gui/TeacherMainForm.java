@@ -324,7 +324,12 @@ public class TeacherMainForm extends javax.swing.JPanel {
         managementPanel.repaint();    }
 
     private void registrationBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        JPanel panel=new RegistrationPanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();
     }
 
 

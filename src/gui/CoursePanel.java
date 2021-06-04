@@ -6,9 +6,7 @@ import pojo.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class CoursePanel extends javax.swing.JPanel {
     private CourseOpen courseOpen=null;
@@ -32,20 +30,19 @@ public class CoursePanel extends javax.swing.JPanel {
         idLabel = new javax.swing.JLabel();
         idTxt = new javax.swing.JTextField();
         deleteBtn = new javax.swing.JButton();
-        sesionLabel = new javax.swing.JLabel();
-        subjecttxt = new javax.swing.JTextField();
         teacherLabel = new javax.swing.JLabel();
         teachertxt = new javax.swing.JTextField();
         roomLabel = new javax.swing.JLabel();
         roomTxt = new javax.swing.JTextField();
         dayLabel = new javax.swing.JLabel();
-        dayTxt = new com.toedter.calendar.JDateChooser();
         subjectLabel = new javax.swing.JLabel();
-        caTxt = new javax.swing.JTextField();
         caLabel = new javax.swing.JLabel();
         slotLabel = new javax.swing.JLabel();
         slotTxt = new javax.swing.JTextField();
-        jSpinner1 = new javax.swing.JSpinner();
+        subjectBox = new javax.swing.JComboBox<>();
+        caBox = new javax.swing.JComboBox<>();
+        dayBox = new javax.swing.JComboBox<>();
+        registrationBtn = new javax.swing.JButton();
 
         namePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.lightGray, java.awt.Color.lightGray));
 
@@ -68,9 +65,13 @@ public class CoursePanel extends javax.swing.JPanel {
                                 .addComponent(studentLabel)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        List<CourseOpen> courseOpens= CourseOpenDao.getCourseList();
+        List<CourseOpen> courseOpens= new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null){
+            Set<CourseOpen> courseOpenSet=SemesterDao.semesterCurrent().getCourses();
+            courseOpens.addAll(courseOpenSet);
+        }
         showTable(courseOpens);
+
         courseTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 courseTableMouseClicked(evt);
@@ -84,7 +85,6 @@ public class CoursePanel extends javax.swing.JPanel {
                 addBtnActionPerformed(evt);
             }
         });
-
         searchBtn.setText("Search");
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,10 +111,7 @@ public class CoursePanel extends javax.swing.JPanel {
             }
         });
 
-        sesionLabel.setText("Session");
-
         teacherLabel.setText("Teacher");
-
 
         roomLabel.setText("Room");
 
@@ -125,13 +122,19 @@ public class CoursePanel extends javax.swing.JPanel {
         caLabel.setText("Ca");
 
         slotLabel.setText("Slots");
+        List<Subjects> subjectsList=SubjectDao.getSubjectList();
+        String []subjectModel=new String[subjectsList.size()];
+        for (int i=0; i<subjectsList.size();i++){
+            Subjects subjects=subjectsList.get(i);
+            subjectModel[i]=subjects.getIdSubject();
+        }
+        subjectBox.setModel(new javax.swing.DefaultComboBoxModel<>(subjectModel));
 
-//        List<CourseSession> courseSessions=CourseSessionDao.getSessionList();
-//        String []model=new String[];
-//        for (int i=0; i<courseSessions.size(); i++){
-//
-//        }
-        jSpinner1.setModel(new javax.swing.SpinnerListModel(new String[] {"SE001", "Item 1", "Item 2", "Item 3"}));
+        caBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ca 1", "Ca 2", "Ca 3", "Ca 4" }));
+
+        dayBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6","Thứ 7","Chủ nhật" }));
+
+        registrationBtn.setText("Registration for student");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -152,54 +155,50 @@ public class CoursePanel extends javax.swing.JPanel {
                                                 .addComponent(sortBtn)
                                                 .addGap(30, 30, 30))
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                .addComponent(caLabel)
-                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                .addComponent(caTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                                                .addComponent(idLabel)
-                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                .addComponent(idTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                                                .addComponent(teacherLabel)
-                                                                                .addGap(18, 18, 18)
-                                                                                .addComponent(teachertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                                .addGap(15, 15, 15)
-                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(sesionLabel)
-                                                                        .addComponent(roomLabel)
-                                                                        .addComponent(slotLabel))
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                        .addComponent(roomTxt)
-                                                                        .addComponent(slotTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                                                                        .addComponent(jSpinner1))
-                                                                .addGap(20, 20, 20)
-                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(subjectLabel)
-                                                                        .addComponent(dayLabel))
-                                                                .addGap(18, 18, 18))
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                                .addComponent(addBtn)
-                                                                .addGap(50, 50, 50)))
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(subjecttxt, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-                                                        .addComponent(dayTxt))
-                                                .addGap(125, 125, 125))
-                                        .addGroup(layout.createSequentialGroup()
                                                 .addGap(241, 241, 241)
                                                 .addComponent(deleteBtn)
-                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                                .addGap(60, 60, 60)
+                                                .addComponent(addBtn)
+                                                .addGap(60, 60, 60)
+                                                .addComponent(registrationBtn)
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGap(38, 38, 38)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(roomLabel)
+                                                        .addComponent(idLabel))
+                                                .addGap(34, 34, 34)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(idTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(0, 0, Short.MAX_VALUE))
+                                                        .addComponent(roomTxt))
+                                                .addGap(34, 34, 34)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(slotLabel)
+                                                        .addComponent(subjectLabel)
+                                                        .addComponent(dayLabel))
+                                                .addGap(34, 34, 34)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(slotTxt)
+                                                        .addComponent(subjectBox, 0, 189, Short.MAX_VALUE)
+                                                        .addComponent(dayBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(teacherLabel)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(teachertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(caLabel)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(caBox, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addContainerGap(137, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(searchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -210,52 +209,53 @@ public class CoursePanel extends javax.swing.JPanel {
                                 .addComponent(tableScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGap(25, 25, 25)
+                                                .addGap(15, 15, 15)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(subjecttxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(subjectLabel))
-                                                .addGap(25, 25, 25)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(dayTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(dayLabel)))
+                                                        .addComponent(subjectLabel)
+                                                        .addComponent(subjectBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGap(25, 25, 25)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                        .addComponent(teacherLabel)
+                                                                        .addComponent(teachertxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addGap(15, 15, 15))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                        .addComponent(idLabel)
+                                                                        .addComponent(idTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(idLabel)
-                                                        .addComponent(idTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(sesionLabel)
-                                                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(25, 25, 25)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(teacherLabel)
-                                                        .addComponent(teachertxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(dayBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(roomLabel)
-                                                        .addComponent(roomTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                        .addComponent(roomTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(dayLabel)
+                                                        .addComponent(caLabel)
+                                                        .addComponent(caBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(25, 25, 25)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(caLabel)
-                                        .addComponent(caTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(slotLabel)
                                         .addComponent(slotTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(25, 25, 25)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(deleteBtn)
-                                        .addComponent(addBtn))
+                                        .addComponent(addBtn)
+                                        .addComponent(registrationBtn))
                                 .addGap(12, 12, 12))
         );
     }// </editor-fold>
 
+
     private void searchBtnActionPerformed(ActionEvent evt) {
         List<CourseOpen> list= CourseOpenDao.fullTextSearch(searchTxt.getText());
-        if (sortBox.getSelectedIndex()==0)
-            list=sortAscendingByName(list);
-        if (sortBox.getSelectedIndex()==1)
-            list=sortDescendingByName(list);
-        if (sortBox.getSelectedIndex()==2)
-            list=sortAscendingByID(list);
-        if (sortBox.getSelectedIndex()==3)
-            list=sortDescendingByID(list);
-        showTable(list);
+        Semester semester=SemesterDao.semesterCurrent();
+        List<CourseOpen> list1=null;
+        for (int i=0; i<list.size(); i++){
+            if (list.get(i).getIdSemester().equals(semester.getIdSemester()))
+                list1.add(list1.get(i));
+        }
+        showTable(list1);
     }
 
     private void showTable(List<CourseOpen> list) {
@@ -264,59 +264,44 @@ public class CoursePanel extends javax.swing.JPanel {
         for (int i=0;i<size; i++){
             objects[i][0]=i+1;
             objects[i][1]=list.get(i).getIdCourse();
-            Semester semester= list.get(i).getIdSemester();
-            if (semester!=null){
-                objects[i][2]=semester.getIdSemester();
+            Subjects subjects= list.get(i).getIdSubject();
+            if (subjects!=null){
+                objects[i][2]=subjects.getIdSubject();
             }
             else {
                 objects[i][2]="";
             }
-            CourseSession courseSession= list.get(i).getIdSession();
-            if (courseSession!=null){
-                objects[i][3]=courseSession.getIdSession();
-            }
-            else {
-                objects[i][3]="";
-            }
-            Subjects subjects= list.get(i).getIdSubject();
-            if (subjects!=null){
-                objects[i][4]=subjects.getIdSubject();
-            }
-            else {
-                objects[i][4]="";
-            }
-            objects[i][5]=list.get(i).getTeacher();
-            objects[i][6]=list.get(i).getRoom();
-            objects[i][7]=list.get(i).getDayCourse().toString();
-            objects[i][8]=list.get(i).getStudyTime().toString();
-            objects[i][9]=list.get(i).getSlots().toString();
+            objects[i][3]=list.get(i).getTeacher();
+            objects[i][4]=list.get(i).getRoom();
+            objects[i][5]=list.get(i).getDayCourse();
+            objects[i][6]=list.get(i).getStudyTime();
+            objects[i][7]=list.get(i).getSlots().toString();
         }
-        courseTable.setModel(new javax.swing.table.DefaultTableModel(objects
-               ,
+        courseTable.setModel(new javax.swing.table.DefaultTableModel(objects,
                 new String [] {
-                        "STT", "idCourse", "idSemester", "idSession", "idSubject", "Teacher", "room", "Day", "Ca", "Slots"
+                        "STT", "idCourse", "idSubject", "Teacher", "room", "Day", "Ca", "Slots"
                 }
         ) {
             Class[] types = new Class [] {
-                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
+
     }
 
     private void courseTableMouseClicked(java.awt.event.MouseEvent evt) {
         int row=courseTable.getSelectedRow();
         if (row>=0){
             idTxt.setText(courseTable.getModel().getValueAt(row,1).toString());
-            jSpinner1.setValue(courseTable.getModel().getValueAt(row,3).toString());
-            subjecttxt.setText(courseTable.getModel().getValueAt(row,4).toString());
+            subjectBox.setSelectedItem(courseTable.getModel().getValueAt(row,4).toString());
             teachertxt.setText(courseTable.getModel().getValueAt(row,5).toString());
             roomTxt.setText(courseTable.getModel().getValueAt(row,6).toString());
-//            dayTxt.setText(courseTable.getModel().getValueAt(row,7).toString());
-            caTxt.setText(courseTable.getModel().getValueAt(row,8).toString());
+            dayBox.setSelectedItem(courseTable.getModel().getValueAt(row,7).toString());
+            caBox.setSelectedItem(courseTable.getModel().getValueAt(row,8).toString());
             slotTxt.setText(courseTable.getModel().getValueAt(row,9).toString());
             courseOpen= CourseOpenDao.getCourse(courseTable.getModel().getValueAt(row,1).toString());
         }
@@ -324,13 +309,12 @@ public class CoursePanel extends javax.swing.JPanel {
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
         String id=idTxt.getText();
-        String session= (String) jSpinner1.getValue();
         Semester semester=SemesterDao.semesterCurrent();
-        Subjects subject= SubjectDao.getSubject(subjecttxt.getText());
+        Subjects subject= SubjectDao.getSubject(subjectBox.getSelectedItem().toString());
         String teacher=teachertxt.getText();
         String room=roomTxt.getText();
-//        Integer day=Integer.parseInt(dayTxt.getText());
-        Integer ca=Integer.parseInt(caTxt.getText());
+        String day=dayBox.getSelectedItem().toString();
+        String ca=caBox.getSelectedItem().toString();
         Integer slots=Integer.parseInt(slotTxt.getText());
         if (id.equals("")){
             JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID is empty.");
@@ -341,9 +325,8 @@ public class CoursePanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID exists.");
             else
             {
-                if (!session.equals("") && semester!=null && subject!=null && !teacher.equals("") && !room.equals("")  && ca>=1 && ca<=4 && slots>0){
-                    CourseSession courseSession= CourseSessionDao.getSession(session);
-                    CourseOpenDao.addCourse(new CourseOpen(id,semester,courseSession,subject,teacher,room,null,ca,slots,null));
+                if (!teacher.equals("") && !room.equals("") && slots>0){
+                    CourseOpenDao.addCourse(new CourseOpen(id,semester,subject,teacher,room,day,ca,slots,null));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Semester Success.");
                 }
             }
@@ -354,7 +337,18 @@ public class CoursePanel extends javax.swing.JPanel {
 
 
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Set<CourseOpen> courseOpenSet=SemesterDao.semesterCurrent().getCourses();
+        List<CourseOpen> list= new ArrayList<>();
+        list.addAll(courseOpenSet);
+        if (sortBox.getSelectedIndex()==0)
+            list=sortAscendingByName(list);
+        if (sortBox.getSelectedIndex()==1)
+            list=sortDescendingByName(list);
+        if (sortBox.getSelectedIndex()==2)
+            list=sortAscendingByID(list);
+        if (sortBox.getSelectedIndex()==3)
+            list=sortDescendingByID(list);
+        showTable(list);
     }
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -400,32 +394,37 @@ public class CoursePanel extends javax.swing.JPanel {
         });
         return list;
     }
-    // Variables declaration - do not modify
+
+
     // Variables declaration - do not modify
     private javax.swing.JButton addBtn;
+    private javax.swing.JComboBox<String> caBox;
     private javax.swing.JLabel caLabel;
-    private javax.swing.JTextField caTxt;
     private javax.swing.JTable courseTable;
+    private javax.swing.JComboBox<String> dayBox;
     private javax.swing.JLabel dayLabel;
-    private com.toedter.calendar.JDateChooser dayTxt;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel idLabel;
     private javax.swing.JTextField idTxt;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JPanel namePanel;
+    private javax.swing.JButton registrationBtn;
     private javax.swing.JLabel roomLabel;
     private javax.swing.JTextField roomTxt;
     private javax.swing.JButton searchBtn;
     private javax.swing.JTextField searchTxt;
-    private javax.swing.JLabel sesionLabel;
     private javax.swing.JLabel slotLabel;
     private javax.swing.JTextField slotTxt;
     private javax.swing.JComboBox<String> sortBox;
     private javax.swing.JButton sortBtn;
     private javax.swing.JLabel studentLabel;
+    private javax.swing.JComboBox<String> subjectBox;
     private javax.swing.JLabel subjectLabel;
-    private javax.swing.JTextField subjecttxt;
     private javax.swing.JScrollPane tableScroll;
     private javax.swing.JLabel teacherLabel;
     private javax.swing.JTextField teachertxt;
+    // End of variables declaration
 }
+
+
+
+
