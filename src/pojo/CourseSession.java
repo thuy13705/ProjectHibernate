@@ -1,6 +1,6 @@
 package pojo;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,6 +11,19 @@ public class CourseSession {
     private Date endDay;
     private Semester idSemester;
     private Set<CourseOpen> courses;
+
+    public CourseSession(String idSession, String nameSession, Date startDay, Date endDay, Semester idSemester, Set<CourseOpen> courses) {
+        this.idSession = idSession;
+        this.nameSession = nameSession;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.idSemester = idSemester;
+        this.courses = courses;
+    }
+
+    public CourseSession() {
+
+    }
 
     public Set<CourseOpen> getCourses() {
         return courses;

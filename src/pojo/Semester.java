@@ -14,12 +14,14 @@ public class Semester {
     private Set<Semester> courses;
     private Integer state;
 
-    public Semester(String idSemester, String nameSemester, Integer yearSemester, Date startDay, Date endDay, Integer state) {
+    public Semester(String idSemester, String nameSemester, Integer yearSemester, Date startDay, Date endDay, Set<CourseSession> sessons, Set<Semester> courses, Integer state) {
         this.idSemester = idSemester;
         this.nameSemester = nameSemester;
         this.yearSemester = yearSemester;
         this.startDay = startDay;
         this.endDay = endDay;
+        this.sessons = sessons;
+        this.courses = courses;
         this.state = state;
     }
 

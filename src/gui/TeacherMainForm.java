@@ -275,10 +275,16 @@ public class TeacherMainForm extends javax.swing.JPanel {
         managementPanel.setLayout(new BorderLayout());
         managementPanel.add(panel);
         managementPanel.validate();
-        managementPanel.repaint();    }
+        managementPanel.repaint();
+    }
 
     private void courseBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        JPanel panel=new CoursePanel();
+        managementPanel.removeAll();
+        managementPanel.setLayout(new BorderLayout());
+        managementPanel.add(panel);
+        managementPanel.validate();
+        managementPanel.repaint();
     }
 
     private void semesterBtnActionPerformed(java.awt.event.ActionEvent evt) {

@@ -3,9 +3,10 @@ package gui;
 import dao.SemesterDao;
 import pojo.Semester;
 
-import javax.persistence.criteria.CriteriaBuilder;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -40,9 +41,9 @@ public class SemesterPanel extends javax.swing.JPanel {
         nameTxt = new javax.swing.JTextField();
         nameLabel = new javax.swing.JLabel();
         startLabel = new javax.swing.JLabel();
-        startTxt = new javax.swing.JTextField();
+        startTxt = new com.toedter.calendar.JDateChooser();
         endLabel = new javax.swing.JLabel();
-        startTxt1 = new javax.swing.JTextField();
+        startTxt1 = new com.toedter.calendar.JDateChooser();
 
         namePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.lightGray, java.awt.Color.lightGray));
 
@@ -69,7 +70,11 @@ public class SemesterPanel extends javax.swing.JPanel {
         showTable(semesterList);
         semesterTabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                semesterTabelMouseClicked(evt);
+                try {
+                    semesterTabelMouseClicked(evt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
         tableScroll.setViewportView(semesterTabel);
@@ -230,8 +235,8 @@ public class SemesterPanel extends javax.swing.JPanel {
             semester[i][1]=list.get(i).getIdSemester();
             semester[i][2]=list.get(i).getNameSemester();
             semester[i][3]=list.get(i).getYearSemester();
-            semester[i][4]=list.get(i).getStartDay().toString();
-            semester[i][5]=list.get(i).getEndDay().toString();
+            semester[i][4]=dateFormat.format(list.get(i).getStartDay());
+            semester[i][5]=dateFormat.format(list.get(i).getEndDay());
             semester[i][6]=list.get(i).getState();
         }
         semesterTabel.setModel(new javax.swing.table.DefaultTableModel(semester,
@@ -262,23 +267,26 @@ public class SemesterPanel extends javax.swing.JPanel {
         showTable(list);
     }
 
-    private void semesterTabelMouseClicked(java.awt.event.MouseEvent evt) {
+    private void semesterTabelMouseClicked(java.awt.event.MouseEvent evt) throws ParseException {
         int row=semesterTabel.getSelectedRow();
         if (row>=0){
             idTxt.setText(semesterTabel.getModel().getValueAt(row,1).toString());
             nameTxt.setText(semesterTabel.getModel().getValueAt(row,2).toString());
             yearTxt.setText(semesterTabel.getModel().getValueAt(row,3).toString());
-            startTxt.setText(semesterTabel.getModel().getValueAt(row,4).toString());
-            startTxt1.setText(semesterTabel.getModel().getValueAt(row,5).toString());
+            Date start= dateFormat.parse(semesterTabel.getModel().getValueAt(row,4).toString());
+            Date end= dateFormat.parse(semesterTabel.getModel().getValueAt(row,5).toString());
+            startTxt.setDate(start);
+            startTxt1.setDate(end);
             semester=SemesterDao.getSemester(semesterTabel.getModel().getValueAt(row,1).toString());
-        }    }
+        }
+    }
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) throws ParseException {
         String id=idTxt.getText();
         String name=nameTxt.getText();
         Integer year=Integer.parseInt(yearTxt.getText());
-        Date startDay=dateFormat.parse(startTxt.getText());
-        Date endDay=dateFormat.parse(startTxt1.getText());
+        Date startDay=dateFormat.parse(dateFormat.format(startTxt.getDate()));
+        Date endDay=dateFormat.parse(dateFormat.format(startTxt1.getDate()));
         if (id.equals("")){
             JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID is empty.");
         }
@@ -289,8 +297,8 @@ public class SemesterPanel extends javax.swing.JPanel {
             else
             {
                 if (!name.equals("") && year!=null && startDay!=null && endDay!=null){
-                    SemesterDao.addSemester(new Semester(id,name,year,startDay,endDay,0));
-                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Class Success.");
+                    SemesterDao.addSemester(new Semester(id,name,year,startDay,endDay,null,null,0));
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Semester Success.");
                 }
             }
         }
@@ -309,7 +317,8 @@ public class SemesterPanel extends javax.swing.JPanel {
             list=sortAscendingByID(list);
         if (sortBox.getSelectedIndex()==3)
             list=sortDescendingByID(list);
-        showTable(list);    }
+        showTable(list);
+    }
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
         int output= JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to delete?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
@@ -391,8 +400,8 @@ public class SemesterPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> sortBox;
     private javax.swing.JButton sortBtn;
     private javax.swing.JLabel startLabel;
-    private javax.swing.JTextField startTxt;
-    private javax.swing.JTextField startTxt1;
+    private com.toedter.calendar.JDateChooser startTxt;
+    private com.toedter.calendar.JDateChooser startTxt1;
     private javax.swing.JLabel studentLabel;
     private javax.swing.JScrollPane tableScroll;
     private javax.swing.JLabel yearLabel;

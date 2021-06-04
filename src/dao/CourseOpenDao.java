@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import pojo.CourseOpen;
+import pojo.CourseSession;
 import util.HibernateUtil;
 
 import javax.persistence.Query;
@@ -103,5 +104,26 @@ public class CourseOpenDao {
             session.close();
         }
         return true;
+    }
+    public static List<CourseOpen> fullTextSearch(String textSearch){
+        List<CourseOpen> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            if (textSearch==null)
+                textSearch="%";
+            else
+                textSearch="%" +textSearch +"%";
+            Query query = session.createQuery("from CourseOpen where idCourse like: textSearch or teacher like: textSearch");
+            query.setParameter("textSearch",textSearch);
+            List<CourseOpen> list1= (List<CourseOpen>) ((org.hibernate.query.Query<?>) query).list();
+            ds=list1;
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
     }
 }

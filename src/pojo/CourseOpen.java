@@ -7,15 +7,32 @@ import java.util.Set;
 
 public class CourseOpen {
     private String idCourse;
+    private Semester idSemester;
+    private CourseSession idSession;
+    private Subjects idSubject;
     private String teacher;
     private String room;
-    private Date dayCourse;
-    private Time studyTime;
+    private Integer dayCourse;
+    private Integer studyTime;
     private Integer slots;
-    private Subjects idSubject;
-    private CourseSession idSession;
     private Set<CourseRegistration> registrations;
-    private Semester idSemester;
+
+    public CourseOpen(String idCourse, Semester idSemester, CourseSession idSession, Subjects idSubject, String teacher, String room, Integer dayCourse, Integer studyTime, Integer slots, Set<CourseRegistration> registrations) {
+        this.idCourse = idCourse;
+        this.idSemester = idSemester;
+        this.idSession = idSession;
+        this.idSubject = idSubject;
+        this.teacher = teacher;
+        this.room = room;
+        this.dayCourse = dayCourse;
+        this.studyTime = studyTime;
+        this.slots = slots;
+        this.registrations = registrations;
+    }
+
+    public CourseOpen() {
+
+    }
 
     public Semester getIdSemester() {
         return idSemester;
@@ -73,19 +90,19 @@ public class CourseOpen {
         this.room = room;
     }
 
-    public Date getDayCourse() {
+    public Integer getDayCourse() {
         return dayCourse;
     }
 
-    public void setDayCourse(Date dayCourse) {
+    public void setDayCourse(Integer dayCourse) {
         this.dayCourse = dayCourse;
     }
 
-    public Time getStudyTime() {
+    public Integer getStudyTime() {
         return studyTime;
     }
 
-    public void setStudyTime(Time studyTime) {
+    public void setStudyTime(Integer studyTime) {
         this.studyTime = studyTime;
     }
 

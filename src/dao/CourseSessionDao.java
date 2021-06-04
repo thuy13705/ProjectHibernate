@@ -4,7 +4,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import pojo.ClassSubject;
 import pojo.CourseSession;
+import pojo.Student;
 import util.HibernateUtil;
 
 import javax.persistence.Query;
@@ -45,15 +47,15 @@ public class CourseSessionDao {
         return courseSession;
     }
 
-    public static boolean addSession(CourseSession courseSession) {
+    public static boolean addSession(CourseSession sv) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        if (CourseSessionDao.getSession(courseSession.getIdSession())!=null) {
+        if (CourseSessionDao.getSession(sv.getIdSession())!=null) {
             return false;
         }
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.save(session);
+            session.save(sv);
             transaction.commit();
         } catch (HibernateException ex) {
             //Log the exception
@@ -64,6 +66,7 @@ public class CourseSessionDao {
         }
         return true;
     }
+
 
     public static boolean deleteSession(String idSession) {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -104,5 +107,26 @@ public class CourseSessionDao {
             session.close();
         }
         return true;
+    }
+    public static List<CourseSession> fullTextSearch(String textSearch){
+        List<CourseSession> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            if (textSearch==null)
+                textSearch="%";
+            else
+                textSearch="%" +textSearch +"%";
+            Query query = session.createQuery("from CourseSession where idSession like: textSearch or nameSession like: textSearch");
+            query.setParameter("textSearch",textSearch);
+            List<CourseSession> list1= (List<CourseSession>) ((org.hibernate.query.Query<?>) query).list();
+            ds=list1;
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
     }
 }
