@@ -66,13 +66,8 @@ public class CoursePanel extends javax.swing.JPanel {
                                 .addComponent(studentLabel)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        List<CourseOpen> courseOpens= new ArrayList<>();
-        System.out.println(SemesterDao.semesterCurrent().getIdSemester());
-        if (SemesterDao.semesterCurrent()!=null){
-            Set<CourseOpen> courseOpenSet=SemesterDao.semesterCurrent().getCourses();
-            courseOpens.addAll(courseOpenSet);
-        }
-        showTable(courseOpens);
+
+        showTable(getList());
 
         courseTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -252,10 +247,12 @@ public class CoursePanel extends javax.swing.JPanel {
     private void searchBtnActionPerformed(ActionEvent evt) {
         List<CourseOpen> list= CourseOpenDao.fullTextSearch(searchTxt.getText());
         Semester semester=SemesterDao.semesterCurrent();
-        List<CourseOpen> list1=null;
-        for (int i=0; i<list.size(); i++){
-            if (list.get(i).getIdSemester().equals(semester.getIdSemester()))
-                list1.add(list1.get(i));
+        List<CourseOpen> list1=new ArrayList<>();
+        if (semester!=null){
+            for (int i=0; i<list.size(); i++){
+                if (list.get(i).getIdSemester().equals(semester.getIdSemester()))
+                    list1.add(list1.get(i));
+            }
         }
         showTable(list1);
     }
@@ -299,12 +296,12 @@ public class CoursePanel extends javax.swing.JPanel {
         int row=courseTable.getSelectedRow();
         if (row>=0){
             idTxt.setText(courseTable.getModel().getValueAt(row,1).toString());
-            subjectBox.setSelectedItem(courseTable.getModel().getValueAt(row,4).toString());
-            teachertxt.setText(courseTable.getModel().getValueAt(row,5).toString());
-            roomTxt.setText(courseTable.getModel().getValueAt(row,6).toString());
-            dayBox.setSelectedItem(courseTable.getModel().getValueAt(row,7).toString());
-            caBox.setSelectedItem(courseTable.getModel().getValueAt(row,8).toString());
-            slotTxt.setText(courseTable.getModel().getValueAt(row,9).toString());
+            subjectBox.setSelectedItem(courseTable.getModel().getValueAt(row,2).toString());
+            teachertxt.setText(courseTable.getModel().getValueAt(row,3).toString());
+            roomTxt.setText(courseTable.getModel().getValueAt(row,4).toString());
+            dayBox.setSelectedItem(courseTable.getModel().getValueAt(row,5).toString());
+            caBox.setSelectedItem(courseTable.getModel().getValueAt(row,6).toString());
+            slotTxt.setText(courseTable.getModel().getValueAt(row,7).toString());
             courseOpen= CourseOpenDao.getCourse(courseTable.getModel().getValueAt(row,1).toString());
         }
     }
@@ -327,21 +324,26 @@ public class CoursePanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID exists.");
             else
             {
-                if (!teacher.equals("") && !room.equals("") && slots>0){
+                if (!teacher.equals("") && !room.equals("") && slots>0 && semester!=null && subject!=null){
                     CourseOpenDao.addCourse(new CourseOpen(id,semester,subject,teacher,room,day,ca,slots,null));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Semester Success.");
                 }
+                else{
+                    if (semester==null){
+                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Not current semester.");
+                    }
+                    else
+                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Field is empty.");
+                }
             }
         }
-        List<CourseOpen> list=CourseOpenDao.getCourseList();
-        showTable(list);
+        showTable(getList());
+        resetInformation();
     }
 
 
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        Set<CourseOpen> courseOpenSet=SemesterDao.semesterCurrent().getCourses();
-        List<CourseOpen> list= new ArrayList<>();
-        list.addAll(courseOpenSet);
+        List<CourseOpen> list= getList();
         if (sortBox.getSelectedIndex()==0)
             list=sortAscendingByName(list);
         if (sortBox.getSelectedIndex()==1)
@@ -354,7 +356,14 @@ public class CoursePanel extends javax.swing.JPanel {
     }
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        int output= JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to delete?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            String id=courseOpen.getIdCourse();
+            CourseOpenDao.deleteCourse(id);
+            JOptionPane.showMessageDialog(new CourseSystemFrame(), "Delete successfully.");
+        }
+        showTable(getList());
+        resetInformation();
     }
 
     public List<CourseOpen> sortAscendingByID(List<CourseOpen> list){
@@ -397,6 +406,24 @@ public class CoursePanel extends javax.swing.JPanel {
         return list;
     }
 
+    private List<CourseOpen> getList(){
+        List<CourseOpen> courseOpens= new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null){
+            Set<CourseOpen> courseOpenSet=SemesterDao.semesterCurrent().getCourses();
+            courseOpens.addAll(courseOpenSet);
+        }
+        return courseOpens;
+    }
+
+    private void resetInformation(){
+        idTxt.setText("");
+        teachertxt.setText("");
+        roomTxt.setText("");
+        slotTxt.setText("");
+        subjectBox.setSelectedIndex(0);
+        dayBox.setSelectedIndex(0);
+        caBox.setSelectedIndex(0);
+    }
 
     // Variables declaration - do not modify
     private javax.swing.JButton addBtn;

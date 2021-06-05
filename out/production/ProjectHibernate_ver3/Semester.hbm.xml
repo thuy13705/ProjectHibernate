@@ -23,13 +23,13 @@
         <property name="state">
             <column name="state" sql-type="int" not-null="true"/>
         </property>
-        <set inverse="true" name="sessions" fetch="join" lazy="false" >
+        <set inverse="true" name="sessions" fetch="join" lazy="false" cascade="delete" >
             <key>
                 <column length="11" name="idSemester"/>
             </key>
             <one-to-many class="pojo.CourseSession"/>
         </set>
-        <set inverse="true" name="courses" fetch="join" lazy="false" >
+        <set inverse="true" name="courses" fetch="join" lazy="false" cascade="delete" >
             <key>
                 <column length="11" name="idSemester" />
             </key>

@@ -290,7 +290,7 @@ public class SessionPanel extends javax.swing.JPanel {
             else
             {
                 if (!name.equals("")  && startDay!=null && endDay!=null){
-                    CourseSessionDao.addSession(new CourseSession(id,name,startDay,endDay,semesterCurrent,null));
+                    CourseSessionDao.addSession(new CourseSession(id,name,startDay,endDay,semesterCurrent));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Session Success.");
                 }
             }

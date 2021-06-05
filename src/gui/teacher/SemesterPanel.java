@@ -329,23 +329,24 @@ public class SemesterPanel extends javax.swing.JPanel {
         int output= JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to delete?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
         if (output==JOptionPane.YES_OPTION){
             String id=semester.getIdSemester();
-            Iterator<CourseOpen> courseOpenIterator=semester.getCourses().iterator();
-            while(courseOpenIterator.hasNext()){
-                CourseOpen courseOpen=courseOpenIterator.next();
-                courseOpen.setIdSemester(null);
-                CourseOpenDao.updateCourse(courseOpen);
-            }
-            Iterator<CourseSession> courseSessionIterator=semester.getSessions().iterator();
-            while(courseSessionIterator.hasNext()){
-                CourseSession courseSession=courseSessionIterator.next();
-                courseSession.setIdSemester(null);
-                CourseSessionDao.updateSession(courseSession);
-            }
+//            Iterator<CourseOpen> courseOpenIterator=semester.getCourses().iterator();
+//            while(courseOpenIterator.hasNext()){
+//                CourseOpen courseOpen=courseOpenIterator.next();
+//                courseOpen.setIdSemester(null);
+//                CourseOpenDao.updateCourse(courseOpen);
+//            }
+//            Iterator<CourseSession> courseSessionIterator=semester.getSessions().iterator();
+//            while(courseSessionIterator.hasNext()){
+//                CourseSession courseSession=courseSessionIterator.next();
+//                courseSession.setIdSemester(null);
+//                CourseSessionDao.updateSession(courseSession);
+//            }
             SemesterDao.deleteSemester(id);
             JOptionPane.showMessageDialog(new CourseSystemFrame(), "Delete successfully.");
         }
         List<Semester> list=SemesterDao.getSemester();
-        showTable(list);    }
+        showTable(list);
+    }
 
     private void setBtnActionPerformed(java.awt.event.ActionEvent evt) {
         List<Semester> semesterList=SemesterDao.getSemester();

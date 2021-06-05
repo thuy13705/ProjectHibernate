@@ -10,28 +10,20 @@ public class CourseSession {
     private Date startDay;
     private Date endDay;
     private Semester idSemester;
-    private Set<CourseOpen> courses;
 
-    public CourseSession(String idSession, String nameSession, Date startDay, Date endDay, Semester idSemester, Set<CourseOpen> courses) {
+    public CourseSession(String idSession, String nameSession, Date startDay, Date endDay, Semester idSemester) {
         this.idSession = idSession;
         this.nameSession = nameSession;
         this.startDay = startDay;
         this.endDay = endDay;
         this.idSemester = idSemester;
-        this.courses = courses;
     }
 
     public CourseSession() {
 
     }
 
-    public Set<CourseOpen> getCourses() {
-        return courses;
-    }
 
-    public void setCourses(Set<CourseOpen> courses) {
-        this.courses = courses;
-    }
 
     public Semester getIdSemester() {
         return idSemester;
