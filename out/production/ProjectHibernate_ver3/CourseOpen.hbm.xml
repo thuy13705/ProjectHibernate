@@ -24,11 +24,11 @@
             <column name="slots" sql-type="int" not-null="true"/>
         </property>
         <many-to-one class="pojo.Subjects" name="idSubject"
-                     fetch="select">
+                     fetch="select" lazy="false"  >
             <column length="11" name="idSubject"/>
         </many-to-one>
         <many-to-one class="pojo.Semester" name="idSemester"
-                     fetch="select" lazy="false" cascade="delete">
+                     fetch="select" lazy="false" >
             <column length="11" name="idSemester" />
         </many-to-one>
         <set inverse="true" name="registrations" fetch="join" lazy="false">

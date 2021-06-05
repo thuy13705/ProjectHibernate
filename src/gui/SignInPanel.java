@@ -1,6 +1,8 @@
 package gui;
 
 import dao.UsersDao;
+import gui.student.StudentMainForm;
+import gui.teacher.TeacherMainForm;
 import pojo.Users;
 
 import javax.swing.*;

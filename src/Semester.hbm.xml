@@ -31,7 +31,7 @@
         </set>
         <set inverse="true" name="courses" fetch="join" lazy="false" >
             <key>
-                <column length="11" name="idCourse" />
+                <column length="11" name="idSemester" />
             </key>
             <one-to-many class="pojo.CourseOpen"/>
         </set>
