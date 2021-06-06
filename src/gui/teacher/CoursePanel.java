@@ -7,6 +7,9 @@ import pojo.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CoursePanel extends javax.swing.JPanel {
@@ -132,6 +135,16 @@ public class CoursePanel extends javax.swing.JPanel {
         dayBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6","Thứ 7","Chủ nhật" }));
 
         registrationBtn.setText("Registration for student");
+        registrationBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    registrationBtnActionPerformed(actionEvent);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -241,7 +254,36 @@ public class CoursePanel extends javax.swing.JPanel {
                                         .addComponent(registrationBtn))
                                 .addGap(12, 12, 12))
         );
+        deleteBtn.setEnabled(false);
+        registrationBtn.setEnabled(false);
     }// </editor-fold>
+
+    private void registrationBtnActionPerformed(ActionEvent actionEvent) throws ParseException {
+        JTextField idTxt=new JTextField();
+        Object []msg={"ID Student:",idTxt};
+        int out=JOptionPane.showConfirmDialog(new CourseSystemFrame(),msg,"Enter the ID Studdent",JOptionPane.OK_CANCEL_OPTION);
+        if (out==JOptionPane.OK_OPTION){
+            String id=idTxt.getText();
+            Student student=StudentDao.getStudent(id);
+            if (student!=null){
+                List<CourseRegistration> list=RegistrationDao.check(student,courseOpen);
+                for (int i=0; i<list.size(); i++){
+                    System.out.println(list.get(i).getIdCourse());
+                    System.out.println(list.get(i).getIdCourse());
+                }
+                if (RegistrationDao.check(student,courseOpen).size()==0){
+                    SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.S");
+                    Date time=dateFormat.parse(dateFormat.format(new Date()));
+                    RegistrationDao.addRegistration(new CourseRegistration(time,courseOpen,student,courseOpen.getIdSemester()));
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Successful.");
+                }
+                else
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Exist.");
+            }
+            else
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Student doesn't exist.");
+        }
+    }
 
 
     private void searchBtnActionPerformed(ActionEvent evt) {
@@ -304,6 +346,8 @@ public class CoursePanel extends javax.swing.JPanel {
             slotTxt.setText(courseTable.getModel().getValueAt(row,7).toString());
             courseOpen= CourseOpenDao.getCourse(courseTable.getModel().getValueAt(row,1).toString());
         }
+        deleteBtn.setEnabled(true);
+        registrationBtn.setEnabled(true);
     }
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -423,6 +467,8 @@ public class CoursePanel extends javax.swing.JPanel {
         subjectBox.setSelectedIndex(0);
         dayBox.setSelectedIndex(0);
         caBox.setSelectedIndex(0);
+        deleteBtn.setEnabled(false);
+        registrationBtn.setEnabled(false);
     }
 
     // Variables declaration - do not modify

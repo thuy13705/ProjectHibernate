@@ -133,11 +133,13 @@ public class AddTeacher extends javax.swing.JDialog {
                 TeacherDao.addTeacher(new Teacher(id,name,id,id,email));
                 UsersDao.addUser(new Users(id,id,0));
                 JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Teacher successfully.");
+                setVisible(false);
             }
             else
                 JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID exists.");
         }
     }
+
 
     // Variables declaration - do not modify
     private javax.swing.JLabel addLabel;

@@ -4,20 +4,21 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import pojo.CourseRegistration;
+import pojo.*;
 import util.HibernateUtil;
 
 import javax.persistence.Query;
 import java.util.List;
 
 public class RegistrationDao {
-    public static List<CourseRegistration> getRegistrationList(){
+    public static List<CourseRegistration> getRegistrationList(Semester semester){
         List<CourseRegistration> ds=null;
         SessionFactory factory= HibernateUtil.getSessionFactory();
         Session session=factory.openSession();
         try {
-            String hql = "select sv from CourseRegistration sv";
+            String hql = "select sv from CourseRegistration sv where sv.idSemester=:semester";
             Query query = session.createQuery(hql);
+            query.setParameter("semester",semester);
             ds = (List<CourseRegistration>) ((org.hibernate.query.Query<?>) query).list();
         } catch (HibernateException ex) {
             //Log the exception
@@ -27,22 +28,7 @@ public class RegistrationDao {
         }
         return ds;
     }
-    public static List<CourseRegistration> getRegistrationStudentList(String idStudent){
-        List<CourseRegistration> ds=null;
-        SessionFactory factory= HibernateUtil.getSessionFactory();
-        Session session=factory.openSession();
-        try {
-            String hql = "select sv from CourseRegistration sv where sv.idStudent=idStudent";
-            Query query = session.createQuery(hql);
-            ds = (List<CourseRegistration>) ((org.hibernate.query.Query<?>) query).list();
-        } catch (HibernateException ex) {
-            //Log the exception
-            System.err.println(ex);
-        } finally {
-            session.close();
-        }
-        return ds;
-    }
+
 
     public static CourseRegistration getRegistration(String idRegistration) {
         CourseRegistration courseRegistration = null;
@@ -120,4 +106,60 @@ public class RegistrationDao {
         }
         return true;
     }
+    public static List<CourseRegistration> check(Student student,CourseOpen course){
+        List<CourseRegistration> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+
+            String hql = "from CourseRegistration  where idStudent=:student and idCourse=:course";
+            Query query = session.createQuery(hql);
+            query.setParameter("student", student);
+            query.setParameter("course", course);
+            ds = (List<CourseRegistration>) ((org.hibernate.query.Query<?>) query).list();
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
+    }
+    public static List<CourseRegistration> getRegistrationStudentList(Student student, Semester semester){
+        List<CourseRegistration> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            String hql = "from CourseRegistration sv where sv.idStudent=:student and sv.idSemester=:semester";
+            Query query = session.createQuery(hql);
+            query.setParameter("student", student);
+            query.setParameter("semester", semester);
+            ds = (List<CourseRegistration>) ((org.hibernate.query.Query<?>) query).list();
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
+    }
+    public static List<CourseRegistration> getRegistrationCourseList(CourseOpen course, Semester semester){
+        List<CourseRegistration> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            String hql = "from CourseRegistration sv where sv.idCourse=:course and sv.idSemester=:semester";
+            Query query = session.createQuery(hql);
+            query.setParameter("course", course);
+            query.setParameter("semester", semester);
+            ds = (List<CourseRegistration>) ((org.hibernate.query.Query<?>) query).list();
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
+    }
+
 }

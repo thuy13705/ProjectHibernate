@@ -1,8 +1,6 @@
 package pojo;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class CourseSession {
     private String idSession;
@@ -10,6 +8,7 @@ public class CourseSession {
     private Date startDay;
     private Date endDay;
     private Semester idSemester;
+
 
     public CourseSession(String idSession, String nameSession, Date startDay, Date endDay, Semester idSemester) {
         this.idSession = idSession;

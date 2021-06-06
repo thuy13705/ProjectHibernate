@@ -259,6 +259,7 @@ public class SubjectPanel extends javax.swing.JPanel {
     }
 
     private void subjectTableMouseClicked(java.awt.event.MouseEvent evt) {
+
         int row=subjectTable.getSelectedRow();
         if (row>=0){
             idTxt.setText(subjectTable.getModel().getValueAt(row,1).toString());
@@ -266,6 +267,7 @@ public class SubjectPanel extends javax.swing.JPanel {
             emailTxt.setText(subjectTable.getModel().getValueAt(row,3).toString());
             subjects= SubjectDao.getSubject(subjectTable.getModel().getValueAt(row,1).toString());
         }
+        idTxt.setEnabled(false);
     }
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -309,12 +311,6 @@ public class SubjectPanel extends javax.swing.JPanel {
 
         int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to delete?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
         if (output==JOptionPane.YES_OPTION){
-            Iterator<CourseOpen> courseOpenIterator=subjects.getSubjects().iterator();
-            while(courseOpenIterator.hasNext()){
-                CourseOpen courseOpen=courseOpenIterator.next();
-                courseOpen.setIdSubject(null);
-                CourseOpenDao.updateCourse(courseOpen);
-            }
             SubjectDao.deleteSubject(id);
             JOptionPane.showMessageDialog(new CourseSystemFrame(),"Delete subject successfully");
         }

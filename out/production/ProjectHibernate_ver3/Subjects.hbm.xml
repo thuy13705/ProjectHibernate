@@ -14,7 +14,7 @@
         <property name="credits">
             <column name="credits" sql-type="int" not-null="true"/>
         </property>
-        <set inverse="true" name="subjects" fetch="join" lazy="false"  >
+        <set inverse="true" name="subjects" fetch="join" lazy="false" cascade="delete" >
             <key>
                 <column length="11" name="idSubject"/>
             </key>

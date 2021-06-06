@@ -19,6 +19,9 @@
                      fetch="select" lazy="false">
             <column length="11" name="idStudent" />
         </many-to-one>
-
+        <many-to-one class="pojo.Semester" name="idSemester"
+                     fetch="select" lazy="false">
+            <column length="11" name="idSemester" />
+        </many-to-one>
     </class>
 </hibernate-mapping>

@@ -1,18 +1,27 @@
 package pojo;
-
-import java.sql.Time;
+import java.util.Date;
 import java.util.Objects;
 
 public class CourseRegistration {
     private int id;
-    private Time timeRegistration;
+    private Date timeRegistration;
     private CourseOpen idCourse;
     private Student idStudent;
+    private Semester idSemester;
 
-    public CourseRegistration(Time timeRegistration, CourseOpen idCourse, Student idStudent) {
+    public Semester getIdSemester() {
+        return idSemester;
+    }
+
+    public void setIdSemester(Semester idSemester) {
+        this.idSemester = idSemester;
+    }
+
+    public CourseRegistration(Date timeRegistration, CourseOpen idCourse, Student idStudent, Semester idSemester) {
         this.timeRegistration = timeRegistration;
         this.idCourse = idCourse;
         this.idStudent = idStudent;
+        this.idSemester = idSemester;
     }
 
     public CourseRegistration() {
@@ -43,11 +52,11 @@ public class CourseRegistration {
         this.id = id;
     }
 
-    public Time getTimeRegistration() {
+    public Date getTimeRegistration() {
         return timeRegistration;
     }
 
-    public void setTimeRegistration(Time timeRegistration) {
+    public void setTimeRegistration(Date timeRegistration) {
         this.timeRegistration = timeRegistration;
     }
 

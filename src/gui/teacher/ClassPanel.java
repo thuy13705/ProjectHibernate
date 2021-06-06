@@ -216,6 +216,7 @@ public class ClassPanel extends javax.swing.JPanel {
         }
         List<ClassSubject> list=ClassSubjectDao.getClassList();
         showTable(list);
+        resetInformation();
     }
 
     private void showTable(List<ClassSubject> list) {
@@ -284,6 +285,7 @@ public class ClassPanel extends javax.swing.JPanel {
         }
         List<ClassSubject> list=ClassSubjectDao.getClassList();
         showTable(list);
+        resetInformation();
     }
 
     private void searchBtnActionPerformed(ActionEvent evt) {
@@ -311,7 +313,6 @@ public class ClassPanel extends javax.swing.JPanel {
         showTable(list);
     }
 
-
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
 
         int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to delete?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
@@ -327,6 +328,7 @@ public class ClassPanel extends javax.swing.JPanel {
         }
         List<ClassSubject> list=ClassSubjectDao.getClassList();
         showTable(list);
+        resetInformation();
     }
 
     public List<ClassSubject> sortAscendingByID(List<ClassSubject> list){
@@ -367,6 +369,11 @@ public class ClassPanel extends javax.swing.JPanel {
             }
         });
         return list;
+    }
+
+    private void resetInformation(){
+        idTxt.setText("");
+        nameTxt.setText("");
     }
     // Variables declaration - do not modify
     private javax.swing.JButton addBtn;

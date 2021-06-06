@@ -1,6 +1,7 @@
 package gui.teacher;
 
 import dao.*;
+import gui.ChangePassword;
 import gui.CourseSystemFrame;
 import pojo.*;
 import pojo.CourseSession;
@@ -43,7 +44,7 @@ public class SessionPanel extends javax.swing.JPanel {
         nameTxt = new javax.swing.JTextField();
         endTxt = new com.toedter.calendar.JDateChooser();
         deleteBtn = new javax.swing.JButton();
-        selectBtn = new javax.swing.JButton();
+        editBtn = new javax.swing.JButton();
 
         namePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.lightGray, java.awt.Color.lightGray));
 
@@ -120,10 +121,14 @@ public class SessionPanel extends javax.swing.JPanel {
             }
         });
 
-        selectBtn.setText("Select Course");
-        selectBtn.addActionListener(new java.awt.event.ActionListener() {
+        editBtn.setText("Edit");
+        editBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectBtnActionPerformed(evt);
+                try {
+                    editBtnActionPerformed(evt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -174,7 +179,7 @@ public class SessionPanel extends javax.swing.JPanel {
                                                                 .addComponent(startTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(116, 116, 116)
-                                                .addComponent(selectBtn)))
+                                                .addComponent(editBtn)))
                                 .addContainerGap(95, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -205,13 +210,43 @@ public class SessionPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(addBtn)
                                         .addComponent(deleteBtn)
-                                        .addComponent(selectBtn))
+                                        .addComponent(editBtn))
                                 .addGap(36, 36, 36))
         );
     }// </editor-fold>
 
-    private void selectBtnActionPerformed(ActionEvent evt) {
+    private void editBtnActionPerformed(ActionEvent evt) throws ParseException {
+        String id=idTxt.getText();
+        String name=nameTxt.getText();
+        Date startDay=dateFormat.parse(dateFormat.format(startTxt.getDate()));
+        Date endDay=dateFormat.parse(dateFormat.format(endTxt.getDate()));
+
+        if (id.equals(courseSession.getIdSession())){
+            if (!name.equals("")){
+                courseSession.setNameSession(name);
+                courseSession.setStartDay(startDay);
+                courseSession.setEndDay(endDay);
+                CourseSessionDao.updateSession(courseSession);
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit Successfully.");
+            }
+            else
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Editing is fail.");
+        }
+        else
+        {
+            if (!name.equals("") && !id.equals("")){
+                Semester semester=courseSession.getIdSemester();
+                CourseSessionDao.deleteSession(courseSession.getIdSession());
+                CourseSessionDao.addSession(new CourseSession(id,name,startDay,endDay,semester));
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit Successfully.");
+            }
+            else
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Editing is fail.");
+        }
+        showTable(getList());
+        resetInformation();
     }
+
 
     private void deleteBtnActionPerformed(ActionEvent evt){
         if (courseSession!=null)
@@ -382,7 +417,7 @@ public class SessionPanel extends javax.swing.JPanel {
     private javax.swing.JTextField nameTxt;
     private javax.swing.JButton searchBtn;
     private javax.swing.JTextField searchTxt;
-    private javax.swing.JButton selectBtn;
+    private javax.swing.JButton editBtn;
     private javax.swing.JTable sessionTable;
     private javax.swing.JComboBox<String> sortBox;
     private javax.swing.JButton sortBtn;
