@@ -30,6 +30,7 @@ public class RegistrationPanel extends javax.swing.JPanel {
         searchTxt = new javax.swing.JTextField();
         studentBtn = new javax.swing.JButton();
         courseBtn = new javax.swing.JButton();
+        resetBtn = new javax.swing.JButton();
 
         namePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.lightGray, java.awt.Color.lightGray));
 
@@ -62,6 +63,9 @@ public class RegistrationPanel extends javax.swing.JPanel {
         showTable(list);
         tableScroll.setViewportView(registrationTable);
 
+        tableScroll.setViewportView(registrationTable);
+
+
         studentBtn.setText("Student");
         studentBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,6 +77,13 @@ public class RegistrationPanel extends javax.swing.JPanel {
         courseBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 courseBtnActionPerformed(evt);
+            }
+        });
+
+        resetBtn.setText("Reset");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
             }
         });
 
@@ -89,7 +100,9 @@ public class RegistrationPanel extends javax.swing.JPanel {
                                 .addComponent(courseBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(studentBtn)
-                                .addGap(430, 430, 430))
+                                .addGap(18, 18, 18)
+                                .addComponent(resetBtn)
+                                .addGap(301, 301, 301))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,12 +112,14 @@ public class RegistrationPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(searchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(studentBtn)
-                                        .addComponent(courseBtn))
+                                        .addComponent(courseBtn)
+                                        .addComponent(resetBtn))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tableScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(35, Short.MAX_VALUE))
         );
     }// </editor-fold>
+
 
     private void showTable(List<CourseRegistration> list){
         int size= list.size();
@@ -161,18 +176,24 @@ public class RegistrationPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new CourseSystemFrame(),"course is not exist");
     }
 
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        showTable(RegistrationDao.getRegistrationList(SemesterDao.semesterCurrent()));
+    }
 
 
     // Variables declaration - do not modify
     private javax.swing.JButton courseBtn;
     private javax.swing.JPanel namePanel;
     private javax.swing.JTable registrationTable;
+    private javax.swing.JButton resetBtn;
     private javax.swing.JTextField searchTxt;
     private javax.swing.JButton studentBtn;
     private javax.swing.JLabel studentLabel;
     private javax.swing.JScrollPane tableScroll;
     // End of variables declaration
 }
+
+
 
 
 

@@ -209,6 +209,9 @@ public class TeacherPanel extends javax.swing.JPanel {
                                         .addComponent(resetBtn))
                                 .addContainerGap(68, Short.MAX_VALUE))
         );
+        deleteBtn.setEnabled(false);
+        editBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
     }// </editor-fold>
 
     private void showTable(List<Teacher> list) {
@@ -242,31 +245,17 @@ public class TeacherPanel extends javax.swing.JPanel {
         String username=usernameTxt.getText();
         String email=emailTxt.getText();
 
-        if (id.equals(teacher.getIdTeacher())){
-            if (name!="" &&  username!="" && email!=""){
-                TeacherDao.updateTeacher(new Teacher(id,name,username,teacher.getPasswordTc(),email));
-                UsersDao.updateUser(new Users(username,teacher.getPasswordTc(),0));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+        if (name!="" &&  username!="" && email!=""){
+            TeacherDao.updateTeacher(new Teacher(id,name,username,teacher.getPasswordTc(),email));
+            UsersDao.updateUser(new Users(username,teacher.getPasswordTc(),0));
+            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
 
-            }
-            else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
         }
-        else{
-            if (name!="" &&  username!="" && email!=""){
-                String pass=teacher.getPasswordTc();
-                UsersDao.deleteUser(teacher.getIdTeacher());
-                TeacherDao.deleteTeacher(teacher.getIdTeacher());
-                TeacherDao.addTeacher(new Teacher(id,name,username,pass,email));
-                UsersDao.addUser(new Users(username,pass,0));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-
-            }
-            else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
-        }
+        else
+            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
         List<Teacher> list=TeacherDao.getTeacherList();
         showTable(list);
+        resetInformation();
     }
 
     private void searchBtnActionPerformed(ActionEvent evt) {
@@ -283,6 +272,10 @@ public class TeacherPanel extends javax.swing.JPanel {
     }
 
     private void teacherTableMouseClicked(java.awt.event.MouseEvent evt) {
+        idTxt.setEnabled(false);
+        deleteBtn.setEnabled(true);
+        editBtn.setEnabled(true);
+        resetBtn.setEnabled(true);
         int row=teacherTable.getSelectedRow();
         if (row>=0){
             idTxt.setText(teacherTable.getModel().getValueAt(row,1).toString());
@@ -292,7 +285,6 @@ public class TeacherPanel extends javax.swing.JPanel {
             teacher= TeacherDao.getTeacher(teacherTable.getModel().getValueAt(row,1).toString());
         }
     }
-
 
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
         List<Teacher> list=TeacherDao.getTeacherList();
@@ -307,7 +299,6 @@ public class TeacherPanel extends javax.swing.JPanel {
         showTable(list);
     }
 
-
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
         String id=teacher.getIdTeacher();
 
@@ -318,6 +309,7 @@ public class TeacherPanel extends javax.swing.JPanel {
         }
         List<Teacher> list=TeacherDao.getTeacherList();
         showTable(list);
+        resetInformation();
     }
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -330,6 +322,7 @@ public class TeacherPanel extends javax.swing.JPanel {
         }
         List<Teacher> list=TeacherDao.getTeacherList();
         showTable(list);
+        resetInformation();
     }
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -338,7 +331,6 @@ public class TeacherPanel extends javax.swing.JPanel {
         List<Teacher> list=TeacherDao.getTeacherList();
         showTable(list);
     }
-
 
     public List<Teacher> sortAscendingByID(List<Teacher> list){
         Collections.sort(list, new Comparator<Teacher>() {
@@ -378,6 +370,18 @@ public class TeacherPanel extends javax.swing.JPanel {
             }
         });
         return list;
+    }
+
+    private void resetInformation(){
+        idTxt.setEnabled(true);
+
+        idTxt.setText("");
+        nameTxt.setText("");
+        usernameTxt.setText("");
+        emailTxt.setText("");
+        deleteBtn.setEnabled(false);
+        editBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
     }
 
     // Variables declaration - do not modify                     

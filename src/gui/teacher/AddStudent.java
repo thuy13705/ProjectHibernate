@@ -1,4 +1,4 @@
-package gui.student;
+package gui.teacher;
 
 import dao.ClassSubjectDao;
 import dao.StudentDao;
@@ -157,7 +157,7 @@ public class AddStudent extends javax.swing.JDialog {
         System.out.println(id);
         String name=nameTxt.getText();
         String gender=genderTxt.getText();
-        String classes=jTextField1.getText();
+        ClassSubject classes=ClassSubjectDao.getClass(jTextField1.getText());
         if (!id.equals("")){
            Student st=StudentDao.getStudent(id);
            if (st==null){
@@ -173,11 +173,15 @@ public class AddStudent extends javax.swing.JDialog {
                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender Incorrect.");
                Student student=new Student();
                if (classes!=null){
-                   ClassSubject classSubject= ClassSubjectDao.getClass(classes);
-                   student=new Student(id,name,username,pass,email,tmp,classSubject);
+                   student=new Student(id,name,username,pass,email,tmp,classes);
                }
                else{
-                   student=new Student(id,name,username,pass,email,tmp);
+                   if (jTextField1.getText().equals(""))
+                       student=new Student(id,name,username,pass,email,tmp);
+                   else{
+                       JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class not exist");
+                       return;
+                   }
                }
                StudentDao.addStudent(student);
                Users user=new Users(id,pass,1);

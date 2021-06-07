@@ -186,6 +186,8 @@ public class ClassPanel extends javax.swing.JPanel {
                                         .addComponent(addBtn))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
     }// </editor-fold>
 
     private void editBtnActionPerformed(ActionEvent evt) {
@@ -265,6 +267,9 @@ public class ClassPanel extends javax.swing.JPanel {
             nameTxt.setText(classTable.getModel().getValueAt(row,2).toString());
             classSubject=ClassSubjectDao.getClass(classTable.getModel().getValueAt(row,1).toString());
         }
+        editBtn.setEnabled(true);
+        deleteBtn.setEnabled(true);
+        idTxt.setEnabled(false);
     }
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -300,6 +305,7 @@ public class ClassPanel extends javax.swing.JPanel {
             list=sortDescendingByID(list);
         showTable(list);
     }
+
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
         List<ClassSubject> list=ClassSubjectDao.getClassList();
         if (sortBox.getSelectedIndex()==0)
@@ -372,8 +378,11 @@ public class ClassPanel extends javax.swing.JPanel {
     }
 
     private void resetInformation(){
+        idTxt.setEnabled(true);
         idTxt.setText("");
         nameTxt.setText("");
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
     }
     // Variables declaration - do not modify
     private javax.swing.JButton addBtn;

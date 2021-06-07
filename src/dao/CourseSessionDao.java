@@ -110,7 +110,7 @@ public class CourseSessionDao {
         }
         return true;
     }
-    public static List<CourseSession> fullTextSearch(String textSearch){
+    public static List<CourseSession> fullTextSearch(String textSearch,Semester semester){
         List<CourseSession> ds=null;
         SessionFactory factory= HibernateUtil.getSessionFactory();
         Session session=factory.openSession();
@@ -119,8 +119,9 @@ public class CourseSessionDao {
                 textSearch="%";
             else
                 textSearch="%" +textSearch +"%";
-            Query query = session.createQuery("from CourseSession where idSession like: textSearch or nameSession like: textSearch");
+            Query query = session.createQuery("from CourseSession where idSession like: textSearch or nameSession like: textSearch and idSemester=:semester");
             query.setParameter("textSearch",textSearch);
+            query.setParameter("semester",semester);
             List<CourseSession> list1= (List<CourseSession>) ((org.hibernate.query.Query<?>) query).list();
             ds=list1;
         } catch (HibernateException ex) {

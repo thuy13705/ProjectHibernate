@@ -339,6 +339,7 @@ public class CoursePanel extends javax.swing.JPanel {
             courseOpen= CourseOpenDao.getCourse(courseTable.getModel().getValueAt(row,1).toString());
         }
         deleteBtn.setEnabled(true);
+        idTxt.setEnabled(false);
         registrationBtn.setEnabled(true);
     }
 
@@ -448,6 +449,7 @@ public class CoursePanel extends javax.swing.JPanel {
     }
 
     private void resetInformation(){
+        idTxt.setEnabled(true);
         idTxt.setText("");
         teachertxt.setText("");
         roomTxt.setText("");

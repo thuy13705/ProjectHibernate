@@ -4,7 +4,6 @@ import dao.ClassSubjectDao;
 import dao.StudentDao;
 import dao.TeacherDao;
 import dao.UsersDao;
-import gui.student.AddStudent;
 import gui.CourseSystemFrame;
 import pojo.ClassSubject;
 import pojo.Student;
@@ -232,7 +231,9 @@ public class StudentPanel extends javax.swing.JPanel {
                                         .addComponent(resetBtn))
                                 .addContainerGap(41, Short.MAX_VALUE))
         );
-
+        deleteBtn.setEnabled(false);
+        editBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
     }// </editor-fold>
 
     private void searchBtnActionPerformed(ActionEvent evt) {
@@ -247,6 +248,7 @@ public class StudentPanel extends javax.swing.JPanel {
             list=sortDescendingByID(list);
         showTable(list);
     }
+
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
         List<Student> list=StudentDao.getStudentList();
         if (sortBox.getSelectedIndex()==0)
@@ -259,7 +261,6 @@ public class StudentPanel extends javax.swing.JPanel {
             list=sortDescendingByID(list);
         showTable(list);
     }
-
 
     private void addBtnActionPerformed(ActionEvent evt) {
         JDialog dialog=new AddStudent(new CourseSystemFrame(),true);
@@ -320,7 +321,9 @@ public class StudentPanel extends javax.swing.JPanel {
         }
         List<Student> list=StudentDao.getStudentList();
         showTable(list);
+        resetInformation();
     }
+
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {
         String id=idTxt.getText();
         String name=nameTxt.getText();
@@ -342,58 +345,28 @@ public class StudentPanel extends javax.swing.JPanel {
             classSubject= ClassSubjectDao.getClass(classes);
         }
         Student st=StudentDao.getStudent(id);
-        if (id.equals(student.getIdStudent())){
-            if (tmp!=-1 && classSubject!=null){
-                StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,classSubject));
-                UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-            }
-            else{
-                if (tmp==-1)
-                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender is incorrect.");
-                if (classSubject==null )
-                {
-                    if (classes.equals("")){
-                        StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,null));
-                        UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
-                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-                    }
-                    else
-                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class doesn't exist.");
-                }
-            }
+        if (tmp!=-1 && classSubject!=null){
+            StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,classSubject));
+            UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
+            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
         }
-        else {
-            if (st==null){
-                String pass=student.getPasswordSt();
-                UsersDao.deleteUser(student.getIdStudent());
-                TeacherDao.deleteTeacher(student.getIdStudent());
-                if (tmp!=-1 && null != classSubject){
-                    StudentDao.addStudent(new Student(id,name,username,pass,email,tmp,classSubject));
-                    UsersDao.addUser(new Users(username,pass,1));
+        else{
+            if (tmp==-1)
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender is incorrect.");
+            if (classSubject==null )
+            {
+                if (classes.equals("")){
+                    StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,null));
+                    UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
                 }
-                else{
-                    if (tmp==-1)
-                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender is incorrect.");
-                    if (classSubject==null )
-                    {
-                        if (classes.equals("")){
-                            StudentDao.updateStudent(new Student(id,name,username,pass,email,tmp,null));
-                            UsersDao.updateUser(new Users(username,pass,1));
-                            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-                        }
-                        else
-                            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class doesn't exist.");
-                    }
-                }
-            }
-            else {
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID exists.");
+                else
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class doesn't exist.");
             }
         }
         List<Student> list=StudentDao.getStudentList();
         showTable(list);
+        resetInformation();
     }
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -407,8 +380,14 @@ public class StudentPanel extends javax.swing.JPanel {
         }
         List<Student> list=StudentDao.getStudentList();
         showTable(list);
+        resetInformation();
     }
+
     private void studentTableMouseClicked(java.awt.event.MouseEvent evt) {
+        idTxt.setEnabled(false);
+        deleteBtn.setEnabled(true);
+        editBtn.setEnabled(true);
+        resetBtn.setEnabled(true);
         int row=studentTable.getSelectedRow();
         if (row>=0){
             idTxt.setText(studentTable.getModel().getValueAt(row,1).toString());
@@ -420,6 +399,7 @@ public class StudentPanel extends javax.swing.JPanel {
             student=StudentDao.getStudent(studentTable.getModel().getValueAt(row,1).toString());
         }
     }
+
     public List<Student> sortAscendingByID(List<Student> list){
         Collections.sort(list, new Comparator<Student>() {
             @Override
@@ -458,6 +438,20 @@ public class StudentPanel extends javax.swing.JPanel {
             }
         });
         return list;
+    }
+
+    private void resetInformation(){
+        idTxt.setEnabled(true);
+
+        idTxt.setText("");
+        nameTxt.setText("");
+        emailTxt.setText("");
+        usernameTxt.setText("");
+        genderTxt.setText("");
+        ckassTxt.setText("");
+        deleteBtn.setEnabled(false);
+        editBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
     }
     // Variables declaration - do not modify
     private javax.swing.JButton addBtn;

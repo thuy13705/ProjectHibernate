@@ -213,6 +213,8 @@ public class SessionPanel extends javax.swing.JPanel {
                                         .addComponent(editBtn))
                                 .addGap(36, 36, 36))
         );
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
     }// </editor-fold>
 
     private void editBtnActionPerformed(ActionEvent evt) throws ParseException {
@@ -284,14 +286,8 @@ public class SessionPanel extends javax.swing.JPanel {
     }
 
     private void searchBtnActionPerformed(ActionEvent evt) {
-        List<CourseSession> list=CourseSessionDao.fullTextSearch(searchTxt.getText());
-        Semester semester=SemesterDao.semesterCurrent();
-        List<CourseSession> list1=new ArrayList<>();
-        for (int i=0; i<list.size(); i++){
-            if (list.get(i).getIdSemester().equals(semester.getIdSemester()))
-                list1.add(list.get(i));
-        }
-        showTable(list1);
+        List<CourseSession> list=CourseSessionDao.fullTextSearch(searchTxt.getText(),SemesterDao.semesterCurrent());
+        showTable(list);
     }
 
     private void sessionTableMouseClicked(java.awt.event.MouseEvent evt) throws ParseException {
@@ -305,6 +301,9 @@ public class SessionPanel extends javax.swing.JPanel {
             endTxt.setDate(end);
             courseSession=CourseSessionDao.getSession(sessionTable.getModel().getValueAt(row,1).toString());
         }
+        idTxt.setEnabled(false);
+        editBtn.setEnabled(true);
+        deleteBtn.setEnabled(true);
     }
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) throws ParseException {
@@ -389,10 +388,13 @@ public class SessionPanel extends javax.swing.JPanel {
     }
 
     private void resetInformation(){
+        idTxt.setEnabled(true);
         idTxt.setText("");
         nameTxt.setText("");
         startTxt.setDate(new Date());
         endTxt.setDate(new Date());
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
     }
 
     private List<CourseSession> getList(){

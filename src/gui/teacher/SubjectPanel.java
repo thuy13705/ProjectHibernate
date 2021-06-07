@@ -189,6 +189,8 @@ public class SubjectPanel extends javax.swing.JPanel {
                                         .addComponent(addBtn))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
     }// </editor-fold>
 
     private void showTable(List<Subjects> list) {
@@ -219,30 +221,16 @@ public class SubjectPanel extends javax.swing.JPanel {
         String id=idTxt.getText();
         String name=nameTxt.getText();
         String credit=emailTxt.getText();
+        if (name!="" && credit!=""){
+            SubjectDao.updateSubject(new Subjects(id,name,Integer.parseInt(credit)));
+            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
 
-
-        if (id.equals(subjects.getSubjects())){
-            if (name!="" && credit!=""){
-                SubjectDao.updateSubject(new Subjects(id,name,Integer.parseInt(credit)));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-
-            }
-            else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
         }
-        else{
-            if (name!="" &&  credit!="" ){
-
-                SubjectDao.deleteSubject(subjects.getIdSubject());
-                SubjectDao.addSubject(new Subjects(id,name,Integer.parseInt(credit)));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-
-            }
-            else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
-        }
+        else
+            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
         List<Subjects> list=SubjectDao.getSubjectList();
         showTable(list);
+        resetInformation();
     }
 
     private void searchBtnActionPerformed(ActionEvent evt) {
@@ -259,7 +247,8 @@ public class SubjectPanel extends javax.swing.JPanel {
     }
 
     private void subjectTableMouseClicked(java.awt.event.MouseEvent evt) {
-
+        editBtn.setEnabled(true);
+        deleteBtn.setEnabled(true);
         int row=subjectTable.getSelectedRow();
         if (row>=0){
             idTxt.setText(subjectTable.getModel().getValueAt(row,1).toString());
@@ -284,13 +273,13 @@ public class SubjectPanel extends javax.swing.JPanel {
             else
             {
                 SubjectDao.addSubject(new Subjects(id,name,credit));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Class Success.");
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Subject Successfully.");
             }
         }
         List<Subjects> list=SubjectDao.getSubjectList();
         showTable(list);
+        resetInformation();
     }
-
 
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
         List<Subjects> list=SubjectDao.getSubjectList();
@@ -305,7 +294,6 @@ public class SubjectPanel extends javax.swing.JPanel {
         showTable(list);
     }
 
-
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
         String id=subjects.getIdSubject();
 
@@ -316,8 +304,8 @@ public class SubjectPanel extends javax.swing.JPanel {
         }
         List<Subjects> list=SubjectDao.getSubjectList();
         showTable(list);
+        resetInformation();
     }
-
 
     public List<Subjects> sortAscendingByID(List<Subjects> list){
         Collections.sort(list, new Comparator<Subjects>() {
@@ -357,6 +345,16 @@ public class SubjectPanel extends javax.swing.JPanel {
             }
         });
         return list;
+    }
+
+    private void resetInformation(){
+        idTxt.setEnabled(true);
+
+        idTxt.setText("");
+        nameTxt.setText("");
+        emailTxt.setText("");
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
     }
     // Variables declaration - do not modify
     // Variables declaration - do not modify

@@ -231,6 +231,8 @@ public class SemesterPanel extends javax.swing.JPanel {
                                         .addComponent(addBtn))
                                 .addContainerGap(30, Short.MAX_VALUE))
         );
+        deleteBtn.setEnabled(false);
+        setBtn.setEnabled(false);
     }// </editor-fold>
     private void showTable(List<Semester> list) {
         int size= list.size();
@@ -284,6 +286,9 @@ public class SemesterPanel extends javax.swing.JPanel {
             startTxt1.setDate(end);
             semester=SemesterDao.getSemester(semesterTabel.getModel().getValueAt(row,1).toString());
         }
+        idTxt.setEnabled(false);
+        deleteBtn.setEnabled(true);
+        setBtn.setEnabled(true);
     }
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) throws ParseException {
@@ -302,13 +307,19 @@ public class SemesterPanel extends javax.swing.JPanel {
             else
             {
                 if (!name.equals("") && year!=null && startDay!=null && endDay!=null){
-                    SemesterDao.addSemester(new Semester(id,name,year,startDay,endDay,null,0,null));
+                    List<Semester> semesterList=SemesterDao.getSemester();
+                    for (int i=0; i<semesterList.size(); i++){
+                        semesterList.get(i).setState(0);
+                        SemesterDao.updateSemester(semesterList.get(i));
+                    }
+                    SemesterDao.addSemester(new Semester(id,name,year,startDay,endDay,null,1,null));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Semester Success.");
                 }
             }
         }
         List<Semester> list=SemesterDao.getSemester();
         showTable(list);
+        resetInformation();
     }
 
 
@@ -329,23 +340,12 @@ public class SemesterPanel extends javax.swing.JPanel {
         int output= JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to delete?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
         if (output==JOptionPane.YES_OPTION){
             String id=semester.getIdSemester();
-//            Iterator<CourseOpen> courseOpenIterator=semester.getCourses().iterator();
-//            while(courseOpenIterator.hasNext()){
-//                CourseOpen courseOpen=courseOpenIterator.next();
-//                courseOpen.setIdSemester(null);
-//                CourseOpenDao.updateCourse(courseOpen);
-//            }
-//            Iterator<CourseSession> courseSessionIterator=semester.getSessions().iterator();
-//            while(courseSessionIterator.hasNext()){
-//                CourseSession courseSession=courseSessionIterator.next();
-//                courseSession.setIdSemester(null);
-//                CourseSessionDao.updateSession(courseSession);
-//            }
             SemesterDao.deleteSemester(id);
             JOptionPane.showMessageDialog(new CourseSystemFrame(), "Delete successfully.");
         }
         List<Semester> list=SemesterDao.getSemester();
         showTable(list);
+        resetInformation();
     }
 
     private void setBtnActionPerformed(java.awt.event.ActionEvent evt) {
@@ -360,6 +360,7 @@ public class SemesterPanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(new CourseSystemFrame(),"Set Semester Successfully.");
         List<Semester> list=SemesterDao.getSemester();
         showTable(list);
+        resetInformation();
     }
     public List<Semester> sortAscendingByID(List<Semester> list){
         Collections.sort(list, new Comparator<Semester>() {
@@ -401,6 +402,16 @@ public class SemesterPanel extends javax.swing.JPanel {
         return list;
     }
 
+    private void resetInformation(){
+        idTxt.setEnabled(true);
+        idTxt.setText("");
+        nameTxt.setText("");
+        yearTxt.setText("");
+        startTxt.setDate(new Date());
+        startTxt1.setDate(new Date());
+        deleteBtn.setEnabled(false);
+        setBtn.setEnabled(false);
+    }
     // Variables declaration - do not modify
 
     private javax.swing.JButton addBtn;
