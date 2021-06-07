@@ -1,11 +1,14 @@
 package gui.student;
 
+import dao.StudentDao;
 import gui.SignInPanel;
+import pojo.Student;
 import pojo.Users;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.text.ParseException;
 
 public class StudentMainForm extends javax.swing.JPanel {
 
@@ -78,7 +81,11 @@ public class StudentMainForm extends javax.swing.JPanel {
         courseBtn.setText("Course Registration");
         courseBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                courseBtnActionPerformed(evt);
+                try {
+                    courseBtnActionPerformed(evt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -162,7 +169,8 @@ public class StudentMainForm extends javax.swing.JPanel {
     }// </editor-fold>
 
     private void showBtnBtnActionPerformed(ActionEvent evt) {
-        JPanel panel=new ResultPanel();
+        Student student= StudentDao.getStudent(user.getUsername());
+        JPanel panel=new ResultPanel(student);
         managementPanel.removeAll();
         managementPanel.setLayout(new BorderLayout());
         managementPanel.add(panel);
@@ -180,8 +188,9 @@ public class StudentMainForm extends javax.swing.JPanel {
         repaint();
     }
 
-    private void courseBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        JPanel panel=new CourseStudentPanel();
+    private void courseBtnActionPerformed(java.awt.event.ActionEvent evt) throws ParseException {
+        Student student= StudentDao.getStudent(user.getUsername());
+        JPanel panel=new CourseStudentPanel(student);
         managementPanel.removeAll();
         managementPanel.setLayout(new BorderLayout());
         managementPanel.add(panel);

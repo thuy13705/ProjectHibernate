@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import pojo.ClassSubject;
 import pojo.CourseSession;
+import pojo.Semester;
 import pojo.Student;
 import util.HibernateUtil;
 
@@ -13,13 +14,14 @@ import javax.persistence.Query;
 import java.util.List;
 
 public class CourseSessionDao {
-    public static List<CourseSession> getSessionList(){
+    public static List<CourseSession> getSessionList(Semester semester){
         List<CourseSession> ds=null;
         SessionFactory factory= HibernateUtil.getSessionFactory();
         Session session=factory.openSession();
         try {
-            String hql = "select sv from CourseSession sv";
+            String hql = "select sv from CourseSession sv where sv.idSemester=:semester";
             Query query = session.createQuery(hql);
+            query.setParameter("semester",semester);
             ds = (List<CourseSession>) ((org.hibernate.query.Query<?>) query).list();
         } catch (HibernateException ex) {
             //Log the exception

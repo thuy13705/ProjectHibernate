@@ -336,7 +336,7 @@ public class SessionPanel extends javax.swing.JPanel {
     }
 
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        List<CourseSession> list=CourseSessionDao.getSessionList();
+        List<CourseSession> list=CourseSessionDao.getSessionList(SemesterDao.semesterCurrent());
         if (sortBox.getSelectedIndex()==0)
             list=sortAscendingByName(list);
         if (sortBox.getSelectedIndex()==1)
@@ -396,11 +396,7 @@ public class SessionPanel extends javax.swing.JPanel {
     }
 
     private List<CourseSession> getList(){
-        List<CourseSession> courseSessionList=new ArrayList<>();
-        if (SemesterDao.semesterCurrent()!=null){
-            Set<CourseSession> courseSessionSet=SemesterDao.semesterCurrent().getSessions();
-            courseSessionList.addAll(courseSessionSet);
-        }
+        List<CourseSession> courseSessionList=CourseSessionDao.getSessionList(SemesterDao.semesterCurrent());
         return courseSessionList;
     }
 

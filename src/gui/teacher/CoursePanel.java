@@ -287,16 +287,8 @@ public class CoursePanel extends javax.swing.JPanel {
 
 
     private void searchBtnActionPerformed(ActionEvent evt) {
-        List<CourseOpen> list= CourseOpenDao.fullTextSearch(searchTxt.getText());
-        Semester semester=SemesterDao.semesterCurrent();
-        List<CourseOpen> list1=new ArrayList<>();
-        if (semester!=null){
-            for (int i=0; i<list.size(); i++){
-                if (list.get(i).getIdSemester().equals(semester.getIdSemester()))
-                    list1.add(list1.get(i));
-            }
-        }
-        showTable(list1);
+        List<CourseOpen> list= CourseOpenDao.fullTextSearch(searchTxt.getText(),SemesterDao.semesterCurrent());
+        showTable(list);
     }
 
     private void showTable(List<CourseOpen> list) {
@@ -451,11 +443,7 @@ public class CoursePanel extends javax.swing.JPanel {
     }
 
     private List<CourseOpen> getList(){
-        List<CourseOpen> courseOpens= new ArrayList<>();
-        if (SemesterDao.semesterCurrent()!=null){
-            Set<CourseOpen> courseOpenSet=SemesterDao.semesterCurrent().getCourses();
-            courseOpens.addAll(courseOpenSet);
-        }
+        List<CourseOpen> courseOpens=CourseOpenDao.getCourseList(SemesterDao.semesterCurrent());
         return courseOpens;
     }
 

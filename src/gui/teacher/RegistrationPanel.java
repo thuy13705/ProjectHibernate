@@ -108,7 +108,6 @@ public class RegistrationPanel extends javax.swing.JPanel {
 
     private void showTable(List<CourseRegistration> list){
         int size= list.size();
-        System.out.println(size);
         Object [][] objects=new Object[size][9];
         for (int i=0;i<size; i++){
             objects[i][0]=i+1;

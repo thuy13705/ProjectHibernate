@@ -66,9 +66,14 @@ public class RegistrationDao {
         return true;
     }
 
-    public static boolean deleteRegistration(String id) {
+    public static boolean deleteRegistration(Student idSudent, CourseOpen idCourse) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        CourseRegistration courseRegistration = RegistrationDao.getRegistration(id);
+        String hql = "from CourseRegistration  where idStudent=:student and idCourse=:course";
+        Query query = session.createQuery(hql);
+        query.setParameter("student", idSudent);
+        query.setParameter("course", idCourse);
+        List<CourseRegistration> ds = (List<CourseRegistration>) ((org.hibernate.query.Query<?>) query).list();
+        CourseRegistration courseRegistration = ds.get(0);
         if(courseRegistration==null){
             return false;
         }
@@ -149,6 +154,24 @@ public class RegistrationDao {
         Session session=factory.openSession();
         try {
             String hql = "from CourseRegistration sv where sv.idCourse=:course and sv.idSemester=:semester";
+            Query query = session.createQuery(hql);
+            query.setParameter("course", course);
+            query.setParameter("semester", semester);
+            ds = (List<CourseRegistration>) ((org.hibernate.query.Query<?>) query).list();
+        } catch (HibernateException ex) {
+            //Log the exception
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
+    }
+    public static List<CourseRegistration> getCourseList(List<CourseOpen> course, Semester semester){
+        List<CourseRegistration> ds=null;
+        SessionFactory factory= HibernateUtil.getSessionFactory();
+        Session session=factory.openSession();
+        try {
+            String hql = "from CourseRegistration sv where sv.idCourse not in :course and sv.idSemester=:semester";
             Query query = session.createQuery(hql);
             query.setParameter("course", course);
             query.setParameter("semester", semester);
