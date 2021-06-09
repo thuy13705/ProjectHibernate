@@ -322,7 +322,6 @@ public class SemesterPanel extends javax.swing.JPanel {
         resetInformation();
     }
 
-
     private void sortBtnActionPerformed(java.awt.event.ActionEvent evt) {
         List<Semester> list=SemesterDao.getSemester();
         if (sortBox.getSelectedIndex()==0)
@@ -343,6 +342,8 @@ public class SemesterPanel extends javax.swing.JPanel {
             SemesterDao.deleteSemester(id);
             JOptionPane.showMessageDialog(new CourseSystemFrame(), "Delete successfully.");
         }
+        else
+            resetInformation();
         List<Semester> list=SemesterDao.getSemester();
         showTable(list);
         resetInformation();

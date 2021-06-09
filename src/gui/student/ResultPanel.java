@@ -7,6 +7,7 @@ import pojo.CourseRegistration;
 import pojo.Student;
 import pojo.Subjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResultPanel extends javax.swing.JPanel {
@@ -47,34 +48,37 @@ public class ResultPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel1)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        List<CourseRegistration> list=RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
-        int size= list.size();
-        Object [][] objects=new Object[size][7];
-        for (int i=0;i<size; i++){
-            objects[i][0]=i+1;
-            CourseOpen courseOpen= list.get(i).getIdCourse();
-            Subjects subjects= courseOpen.getIdSubject();
-            objects[i][1]=subjects.getIdSubject();
-            objects[i][2]=subjects.getNameSubject();
-            objects[i][3]=courseOpen.getTeacher();
-            objects[i][4]=subjects.getCredits();
-            objects[i][5]=courseOpen.getDayCourse()+", "+courseOpen.getStudyTime();
-            objects[i][6]=list.get(i).getTimeRegistration();
-        }
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(objects
-               ,
-                new String [] {
-                        "STT", "ID Subject","Name Subject","Name Teacher", "Credits", "Day", "Time Registration"
-                }
-        ) {
-            Class[] types = new Class [] {
-                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+        List<CourseRegistration> list=new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null){
+            list=RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
+            int size= list.size();
+            Object [][] objects=new Object[size][7];
+            for (int i=0;i<size; i++){
+                objects[i][0]=i+1;
+                CourseOpen courseOpen= list.get(i).getIdCourse();
+                Subjects subjects= courseOpen.getIdSubject();
+                objects[i][1]=subjects.getIdSubject();
+                objects[i][2]=subjects.getNameSubject();
+                objects[i][3]=courseOpen.getTeacher();
+                objects[i][4]=subjects.getCredits();
+                objects[i][5]=courseOpen.getDayCourse()+", "+courseOpen.getStudyTime();
+                objects[i][6]=list.get(i).getTimeRegistration();
             }
-        });
+            jTable1.setModel(new javax.swing.table.DefaultTableModel(objects
+                    ,
+                    new String [] {
+                            "STT", "ID Subject","Name Subject","Name Teacher", "Credits", "Day", "Time Registration"
+                    }
+            ) {
+                Class[] types = new Class [] {
+                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
+            });
+        }
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

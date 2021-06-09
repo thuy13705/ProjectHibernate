@@ -319,6 +319,8 @@ public class StudentPanel extends javax.swing.JPanel {
             StudentDao.deleteStudent(id);
             UsersDao.deleteUser(id);
         }
+        else
+            resetInformation();
         List<Student> list=StudentDao.getStudentList();
         showTable(list);
         resetInformation();
@@ -331,39 +333,44 @@ public class StudentPanel extends javax.swing.JPanel {
         String username=usernameTxt.getText();
         String email=emailTxt.getText();
         String classes=ckassTxt.getText();
-        System.out.println(classes);
 
-        int tmp=-1;
-        if (gender.equals("Nữ")){
-            tmp=1;
-        }
-        else if (gender.equals("Nam")){
-            tmp=0;
-        }
-        ClassSubject classSubject=null;
-        if (!classes.equals("")){
-            classSubject= ClassSubjectDao.getClass(classes);
-        }
-        Student st=StudentDao.getStudent(id);
-        if (tmp!=-1 && classSubject!=null){
-            StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,classSubject));
-            UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
-            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-        }
-        else{
-            if (tmp==-1)
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender is incorrect.");
-            if (classSubject==null )
-            {
-                if (classes.equals("")){
-                    StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,null));
-                    UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
-                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to Edit?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            int tmp=-1;
+            if (gender.equals("Nữ")){
+                tmp=1;
+            }
+            else if (gender.equals("Nam")){
+                tmp=0;
+            }
+            ClassSubject classSubject=null;
+            if (!classes.equals("")){
+                classSubject= ClassSubjectDao.getClass(classes);
+            }
+            Student st=StudentDao.getStudent(id);
+            if (tmp!=-1 && classSubject!=null){
+                StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,classSubject));
+                UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+            }
+            else{
+                if (tmp==-1)
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Gender is incorrect.");
+                if (classSubject==null )
+                {
+                    if (classes.equals("")){
+                        StudentDao.updateStudent(new Student(id,name,username,st.getPasswordSt(),email,tmp,null));
+                        UsersDao.updateUser(new Users(username,st.getPasswordSt(),1));
+                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+                    }
+                    else
+                        JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class doesn't exist.");
                 }
-                else
-                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Class doesn't exist.");
             }
         }
+        else
+            resetInformation();
+
         List<Student> list=StudentDao.getStudentList();
         showTable(list);
         resetInformation();

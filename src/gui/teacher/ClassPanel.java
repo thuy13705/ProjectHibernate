@@ -194,28 +194,32 @@ public class ClassPanel extends javax.swing.JPanel {
         String id=idTxt.getText();
         String name=nameTxt.getText();
 
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to edit class?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION)
+            if (id.equals(classSubject.getIdClass())){
+                if (name!=""){
+                    classSubject.setNameClass(name);
+                    ClassSubjectDao.updateClass(classSubject);
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
 
-        if (id.equals(classSubject.getIdClass())){
-            if (name!=""){
-                classSubject.setNameClass(name);
-                ClassSubjectDao.updateClass(classSubject);
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
-
+                }
+                else
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
             }
-            else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
-        }
-        else{
-            if (name!="" ){
+            else{
+                if (name!="" ){
 
-                ClassSubjectDao.deleteClass(classSubject.getIdClass());
-                ClassSubjectDao.addClass(new ClassSubject(id,name,null));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+                    ClassSubjectDao.deleteClass(classSubject.getIdClass());
+                    ClassSubjectDao.addClass(new ClassSubject(id,name,null));
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
 
+                }
+                else
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
             }
-            else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
-        }
+        else
+            resetInformation();
+
         List<ClassSubject> list=ClassSubjectDao.getClassList();
         showTable(list);
         resetInformation();
@@ -275,19 +279,25 @@ public class ClassPanel extends javax.swing.JPanel {
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
         String id=idTxt.getText();
         String name=nameTxt.getText();
-        if (id.equals("")){
-            JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID is empty.");
-        }
-        else {
-            ClassSubject classSubject1=ClassSubjectDao.getClass(id);
-            if (classSubject1!=null)
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID exists.");
-            else
-            {
-                ClassSubjectDao.addClass(new ClassSubject(id,name,null));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Class Success.");
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to add class?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            if (id.equals("")){
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID is empty.");
+            }
+            else {
+                ClassSubject classSubject1=ClassSubjectDao.getClass(id);
+                if (classSubject1!=null)
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"ID exists.");
+                else
+                {
+                    ClassSubjectDao.addClass(new ClassSubject(id,name,null));
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Add Class Success.");
+                }
             }
         }
+        else
+            resetInformation();
+
         List<ClassSubject> list=ClassSubjectDao.getClassList();
         showTable(list);
         resetInformation();
@@ -332,6 +342,8 @@ public class ClassPanel extends javax.swing.JPanel {
             }
             ClassSubjectDao.deleteClass(classSubject.getIdClass());
         }
+        else
+            resetInformation();
         List<ClassSubject> list=ClassSubjectDao.getClassList();
         showTable(list);
         resetInformation();

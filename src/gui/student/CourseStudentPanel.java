@@ -183,9 +183,9 @@ public class CourseStudentPanel extends javax.swing.JPanel {
             boolean check= (boolean) listTable.getModel().getValueAt(i,8);
             if (check==true){
                 String time=listTable.getValueAt(i,5).toString();
-                Subjects subjects=CourseOpenDao.getCourse(listTable.getValueAt(i,1).toString()).getIdSubject();
+                Subjects subjects=CourseOpenDao.getCourse(listTable.getModel().getValueAt(i,1).toString()).getIdSubject();
                 if (checkTimeStudy(time,getResult()) && checkTimeStudy(time,list) && checkSubject(subjects,list)){
-                    CourseOpen courseOpen=CourseOpenDao.getCourse(listTable.getValueAt(i,1).toString());
+                    CourseOpen courseOpen=CourseOpenDao.getCourse(listTable.getModel().getValueAt(i,1).toString());
                     CourseRegistration courseRegistration=new CourseRegistration(new Date(),courseOpen,student,SemesterDao.semesterCurrent());
                     list.add(courseRegistration);
                 }
@@ -313,46 +313,69 @@ public class CourseStudentPanel extends javax.swing.JPanel {
     }
 
     private int countSlot(CourseOpen courseOpen){
-        List<CourseRegistration> list=RegistrationDao.getRegistrationCourseList(courseOpen,SemesterDao.semesterCurrent());
+        List<CourseRegistration> list=new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null)
+        {
+            list=RegistrationDao.getRegistrationCourseList(courseOpen,SemesterDao.semesterCurrent());
+        }
         return list.size();
     }
 
     private boolean checkTime() throws ParseException {
         Date currentDate=new Date();
-        List<CourseSession> list= CourseSessionDao.getSessionList(SemesterDao.semesterCurrent());
-        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.S");
-        for (int i=0; i<list.size(); i++){
-            Date start=list.get(i).getStartDay();
-            Date end=list.get(i).getEndDay();
-            String endDay=dateFormat.format(end);
-            String s = endDay.replaceAll("00:00:00.0", "23:59:59.999");
-            end=dateFormat.parse(s);
-            int check1=currentDate.compareTo(start);
-            int check2=currentDate.compareTo(end);
-            if (check1==1 && check2==-1)
-                return true;
+        List<CourseSession> list=new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null)
+        {
+            list= CourseSessionDao.getSessionList(SemesterDao.semesterCurrent());
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.S");
+            for (int i=0; i<list.size(); i++){
+                Date start=list.get(i).getStartDay();
+                Date end=list.get(i).getEndDay();
+                String endDay=dateFormat.format(end);
+                String s = endDay.replaceAll("00:00:00.0", "23:59:59.999");
+                end=dateFormat.parse(s);
+                int check1=currentDate.compareTo(start);
+                int check2=currentDate.compareTo(end);
+                if (check1==1 && check2==-1)
+                    return true;
+            }
         }
         return false;
     }
 
     private List<CourseRegistration> getResult(){
-        List<CourseRegistration> list= RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
+        List<CourseRegistration> list=new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null)
+        {
+            list=RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
+        }
         return list;
     }
 
     private List<Subjects> getSubjectList(){
-        List<CourseRegistration> list= RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
+        List<CourseRegistration> list=new ArrayList<>();
         List<Subjects> subjectsList=new ArrayList<>();
-        for (int i=0; i<list.size(); i++){
-            CourseOpen courseOpen=list.get(i).getIdCourse();
-            Subjects subjects=courseOpen.getIdSubject();
-            subjectsList.add(subjects);
+        if (SemesterDao.semesterCurrent()!=null)
+        {
+           list= RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
+            for (int i=0; i<list.size(); i++){
+                CourseOpen courseOpen=list.get(i).getIdCourse();
+                Subjects subjects=courseOpen.getIdSubject();
+                subjectsList.add(subjects);
+            }
         }
+
         return subjectsList;
     }
 
     private List<CourseOpen> getCourse(List<Subjects> subjects){
-        List<CourseOpen> list= CourseOpenDao.getCourseList(subjects,SemesterDao.semesterCurrent());
+        List<CourseOpen> list=new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null){
+            if (subjects.size()==0)
+                list= CourseOpenDao.getCourseList(SemesterDao.semesterCurrent());
+            else
+                list= CourseOpenDao.getCourseList(subjects,SemesterDao.semesterCurrent());
+        }
         return list;
     }
     // Variables declaration - do not modify

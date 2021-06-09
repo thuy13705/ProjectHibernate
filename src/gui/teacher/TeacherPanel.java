@@ -240,19 +240,25 @@ public class TeacherPanel extends javax.swing.JPanel {
     }
 
     private void editBtnActionPerformed(ActionEvent evt) {
-        String id=idTxt.getText();
-        String name=nameTxt.getText();
-        String username=usernameTxt.getText();
-        String email=emailTxt.getText();
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to edit?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            String id=idTxt.getText();
+            String name=nameTxt.getText();
+            String username=usernameTxt.getText();
+            String email=emailTxt.getText();
 
-        if (name!="" &&  username!="" && email!=""){
-            TeacherDao.updateTeacher(new Teacher(id,name,username,teacher.getPasswordTc(),email));
-            UsersDao.updateUser(new Users(username,teacher.getPasswordTc(),0));
-            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+            if (name!="" &&  username!="" && email!=""){
+                TeacherDao.updateTeacher(new Teacher(id,name,username,teacher.getPasswordTc(),email));
+                UsersDao.updateUser(new Users(username,teacher.getPasswordTc(),0));
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
 
+            }
+            else
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
         }
         else
-            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
+            resetInformation();
+
         List<Teacher> list=TeacherDao.getTeacherList();
         showTable(list);
         resetInformation();
@@ -307,6 +313,8 @@ public class TeacherPanel extends javax.swing.JPanel {
             TeacherDao.deleteTeacher(id);
             UsersDao.deleteUser(id);
         }
+        else
+            resetInformation();
         List<Teacher> list=TeacherDao.getTeacherList();
         showTable(list);
         resetInformation();
@@ -374,7 +382,6 @@ public class TeacherPanel extends javax.swing.JPanel {
 
     private void resetInformation(){
         idTxt.setEnabled(true);
-
         idTxt.setText("");
         nameTxt.setText("");
         usernameTxt.setText("");

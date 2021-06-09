@@ -257,6 +257,42 @@ public class CoursePanel extends javax.swing.JPanel {
         deleteBtn.setEnabled(false);
         registrationBtn.setEnabled(false);
     }// </editor-fold>
+    private List<Subjects> getSubjectList(Student student){
+        List<CourseRegistration> list=new ArrayList<>();
+        List<Subjects> subjectsList=new ArrayList<>();
+        if (SemesterDao.semesterCurrent()!=null)
+        {
+            list= RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
+            for (int i=0; i<list.size(); i++){
+                CourseOpen courseOpen=list.get(i).getIdCourse();
+                Subjects subjects=courseOpen.getIdSubject();
+                subjectsList.add(subjects);
+            }
+        }
+
+        return subjectsList;
+    }
+
+    private boolean checkTimeStudy(String time,List<CourseRegistration> list){
+        for (int i=0; i<list.size(); i++){
+            CourseOpen courseOpen=list.get(i).getIdCourse();
+            String timeStudy=courseOpen.getDayCourse()+", "+courseOpen.getStudyTime();
+            System.out.println(timeStudy);
+            if (timeStudy.equals(time))
+                return false;
+        }
+        return true;
+    }
+    private boolean checkSubject(CourseOpen courseOpen,Student student){
+        List<Subjects> subjects=getSubjectList(student);
+        int size=subjects.size();
+        String id1=courseOpen.getIdSubject().getIdSubject();
+        for (int i=0; i<size; i++){
+            if (id1.equals(subjects.get(i).getIdSubject()))
+                return false;
+        }
+        return true;
+    }
 
     private void registrationBtnActionPerformed(ActionEvent actionEvent) throws ParseException {
         JTextField idTxt=new JTextField();
@@ -265,24 +301,23 @@ public class CoursePanel extends javax.swing.JPanel {
         if (out==JOptionPane.OK_OPTION){
             String id=idTxt.getText();
             Student student=StudentDao.getStudent(id);
+            String timest=courseOpen.getDayCourse()+", "+courseOpen.getStudyTime();
             if (student!=null){
-                List<CourseRegistration> list=RegistrationDao.check(student,courseOpen);
-                for (int i=0; i<list.size(); i++){
-                    System.out.println(list.get(i).getIdCourse());
-                    System.out.println(list.get(i).getIdCourse());
-                }
-                if (RegistrationDao.check(student,courseOpen).size()==0){
+                List<CourseRegistration> list=RegistrationDao.getRegistrationStudentList(student,SemesterDao.semesterCurrent());
+                if (RegistrationDao.check(student,courseOpen).size()==0 && list.size()<=7 &&
+                checkSubject(courseOpen,student) && checkTimeStudy(timest, list)){
                     SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.S");
                     Date time=dateFormat.parse(dateFormat.format(new Date()));
                     RegistrationDao.addRegistration(new CourseRegistration(time,courseOpen,student,courseOpen.getIdSemester()));
                     JOptionPane.showMessageDialog(new CourseSystemFrame(),"Successful.");
                 }
                 else
-                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Exist.");
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Not Registration.");
             }
             else
                 JOptionPane.showMessageDialog(new CourseSystemFrame(),"Student doesn't exist.");
         }
+        resetInformation();
     }
 
 
@@ -399,6 +434,8 @@ public class CoursePanel extends javax.swing.JPanel {
             CourseOpenDao.deleteCourse(id);
             JOptionPane.showMessageDialog(new CourseSystemFrame(), "Delete successfully.");
         }
+        else
+            resetInformation();
         showTable(getList());
         resetInformation();
     }

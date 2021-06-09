@@ -218,16 +218,22 @@ public class SubjectPanel extends javax.swing.JPanel {
         });
     }
     private void editBtnActionPerformed(ActionEvent evt) {
-        String id=idTxt.getText();
-        String name=nameTxt.getText();
-        String credit=emailTxt.getText();
-        if (name!="" && credit!=""){
-            SubjectDao.updateSubject(new Subjects(id,name,Integer.parseInt(credit)));
-            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to edit?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            String id=idTxt.getText();
+            String name=nameTxt.getText();
+            String credit=emailTxt.getText();
+            if (name!="" && credit!=""){
+                SubjectDao.updateSubject(new Subjects(id,name,Integer.parseInt(credit)));
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit success.");
 
+            }
+            else
+                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
         }
         else
-            JOptionPane.showMessageDialog(new CourseSystemFrame(),"Has a empty field.");
+            resetInformation();
+
         List<Subjects> list=SubjectDao.getSubjectList();
         showTable(list);
         resetInformation();
@@ -302,6 +308,7 @@ public class SubjectPanel extends javax.swing.JPanel {
             SubjectDao.deleteSubject(id);
             JOptionPane.showMessageDialog(new CourseSystemFrame(),"Delete subject successfully");
         }
+        resetInformation();
         List<Subjects> list=SubjectDao.getSubjectList();
         showTable(list);
         resetInformation();

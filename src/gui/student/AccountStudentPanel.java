@@ -16,7 +16,7 @@ public class AccountStudentPanel extends javax.swing.JPanel {
 
     private Users user;
     public AccountStudentPanel(Users users) {
-        user=users;
+        this.user=users;
         initComponents();
     }
     @SuppressWarnings("unchecked")
@@ -119,36 +119,7 @@ public class AccountStudentPanel extends javax.swing.JPanel {
         genderLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
         genderText.setText("");
-        Student student= StudentDao.getStudent(user.getUsername());
-
-        idText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        idText.setText(student.getIdStudent());
-
-        nameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        nameText.setText(student.getNameStudent());
-
-        usernameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        usernameText.setText(student.getUsername());
-
-        emailText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        emailText.setText(student.getEmail());
-
-        classLabel.setText("Class:");
-        classLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-
-        ClassSubject classSubject= student.getIdClass();
-        classText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        if (classSubject!=null)
-            classText.setText(classSubject.getNameClass());
-        String gender="";
-        if (student.getGender()==1){
-            gender="Nữ";
-        }
-        else{
-            gender="Nam";
-        }
-        genderText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        genderText.setText(gender);
+        showStudent();
         javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
         contentPanel.setLayout(contentPanelLayout);
         contentPanelLayout.setHorizontalGroup(
@@ -250,9 +221,44 @@ public class AccountStudentPanel extends javax.swing.JPanel {
                                         .addGap(0, 0, Short.MAX_VALUE)))
         );
     }// </editor-fold>
+
+    private void showStudent() {
+        Student student= StudentDao.getStudent(user.getUsername());
+
+        idText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        idText.setText(student.getIdStudent());
+
+        nameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        nameText.setText(student.getNameStudent());
+
+        usernameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        usernameText.setText(student.getUsername());
+
+        emailText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        emailText.setText(student.getEmail());
+
+        classLabel.setText("Class:");
+        classLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+
+        ClassSubject classSubject= student.getIdClass();
+        classText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        if (classSubject!=null)
+            classText.setText(classSubject.getNameClass());
+        String gender="";
+        if (student.getGender()==1){
+            gender="Nữ";
+        }
+        else{
+            gender="Nam";
+        }
+        genderText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        genderText.setText(gender);
+    }
+
     private void editBtnActionPerformed(ActionEvent actionEvent) {
         JDialog dialog=new EditStudent(new CourseSystemFrame(),true,user);
         dialog.setVisible(true);
+        showStudent();
 
     }
 

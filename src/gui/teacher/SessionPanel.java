@@ -218,33 +218,39 @@ public class SessionPanel extends javax.swing.JPanel {
     }// </editor-fold>
 
     private void editBtnActionPerformed(ActionEvent evt) throws ParseException {
-        String id=idTxt.getText();
-        String name=nameTxt.getText();
-        Date startDay=dateFormat.parse(dateFormat.format(startTxt.getDate()));
-        Date endDay=dateFormat.parse(dateFormat.format(endTxt.getDate()));
+        int output=JOptionPane.showConfirmDialog(new CourseSystemFrame(),"Are you sure you want to Edit?", String.valueOf(JOptionPane.QUESTION_MESSAGE),JOptionPane.YES_NO_OPTION);
+        if (output==JOptionPane.YES_OPTION){
+            String id=idTxt.getText();
+            String name=nameTxt.getText();
+            Date startDay=dateFormat.parse(dateFormat.format(startTxt.getDate()));
+            Date endDay=dateFormat.parse(dateFormat.format(endTxt.getDate()));
 
-        if (id.equals(courseSession.getIdSession())){
-            if (!name.equals("")){
-                courseSession.setNameSession(name);
-                courseSession.setStartDay(startDay);
-                courseSession.setEndDay(endDay);
-                CourseSessionDao.updateSession(courseSession);
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit Successfully.");
+            if (id.equals(courseSession.getIdSession())){
+                if (!name.equals("")){
+                    courseSession.setNameSession(name);
+                    courseSession.setStartDay(startDay);
+                    courseSession.setEndDay(endDay);
+                    CourseSessionDao.updateSession(courseSession);
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit Successfully.");
+                }
+                else
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Editing is fail.");
             }
             else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Editing is fail.");
+            {
+                if (!name.equals("") && !id.equals("")){
+                    Semester semester=courseSession.getIdSemester();
+                    CourseSessionDao.deleteSession(courseSession.getIdSession());
+                    CourseSessionDao.addSession(new CourseSession(id,name,startDay,endDay,semester));
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit Successfully.");
+                }
+                else
+                    JOptionPane.showMessageDialog(new CourseSystemFrame(),"Editing is fail.");
+            }
         }
         else
-        {
-            if (!name.equals("") && !id.equals("")){
-                Semester semester=courseSession.getIdSemester();
-                CourseSessionDao.deleteSession(courseSession.getIdSession());
-                CourseSessionDao.addSession(new CourseSession(id,name,startDay,endDay,semester));
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Edit Successfully.");
-            }
-            else
-                JOptionPane.showMessageDialog(new CourseSystemFrame(),"Editing is fail.");
-        }
+            resetInformation();
+
         showTable(getList());
         resetInformation();
     }
@@ -256,6 +262,8 @@ public class SessionPanel extends javax.swing.JPanel {
             CourseSessionDao.deleteSession(courseSession.getIdSession());
             JOptionPane.showMessageDialog(new CourseSystemFrame(), "Delete Session Successfully.");
         }
+        else
+            resetInformation();
         showTable(getList());
         resetInformation();
     }

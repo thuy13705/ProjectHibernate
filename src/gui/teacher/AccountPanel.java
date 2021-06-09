@@ -88,18 +88,7 @@ public class AccountPanel extends javax.swing.JPanel {
             }
         });
 
-        Teacher teacher=TeacherDao.getTeacher(user.getUsername());
-        idText.setText(teacher.getIdTeacher());
-        idText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-
-        nameText.setText(teacher.getNameTeacher());
-        nameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-
-        usernameText.setText(teacher.getUsername());
-        usernameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-
-        emailText.setText(teacher.getEmail());
-        emailText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        showTeacher();
 
         javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
         contentPanel.setLayout(contentPanelLayout);
@@ -168,6 +157,22 @@ public class AccountPanel extends javax.swing.JPanel {
                                 .addComponent(contentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>
+
+    private void showTeacher() {
+        Teacher teacher=TeacherDao.getTeacher(user.getUsername());
+        idText.setText(teacher.getIdTeacher());
+        idText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+
+        nameText.setText(teacher.getNameTeacher());
+        nameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+
+        usernameText.setText(teacher.getUsername());
+        usernameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+
+        emailText.setText(teacher.getEmail());
+        emailText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+
+    }
 
     private void editBtnActionPerformed(ActionEvent evt) {
 

@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import pojo.Semester;
 import pojo.Student;
 import util.HibernateUtil;
 
@@ -29,11 +30,11 @@ public class StudentDao {
     }
 
     public static Student getStudent(String idStudent) {
-        Student sv = null;
+        Student student = null;
         Session session = HibernateUtil.getSessionFactory()
                 .openSession();
         try {
-            sv = (Student) session.get(Student.class,
+            student = (Student) session.get(Student.class,
                     idStudent);
         } catch (HibernateException ex) {
             //Log the exception
@@ -41,7 +42,7 @@ public class StudentDao {
         } finally {
             session.close();
         }
-        return sv;
+        return student;
     }
 
     public static boolean addStudent(Student sv) {
